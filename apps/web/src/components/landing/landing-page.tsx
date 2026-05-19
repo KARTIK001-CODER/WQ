@@ -23,7 +23,7 @@ export default function LandingPage() {
           <nav className="flex items-center justify-between rounded-2xl border border-mist-border/60 bg-white/70 px-6 py-3.5 shadow-[0_4px_24px_-4px_rgba(61,140,111,0.08)] backdrop-blur-xl">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg shadow-sm border border-mist-border/50">
                 <img 
                   src="/aethera-logo.png" 
                   alt="Aethera Logo" 
