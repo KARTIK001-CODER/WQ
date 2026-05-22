@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,33 +7,25 @@ const inter = Inter({
   variable: "--font-sans",
 });
 
-const outfit = Outfit({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
-  title: "AETHERA | Learn, Refreshed.",
+  title: "Aethera — Learn Smarter With AI",
   description:
-    "A premium, organic learning management system where knowledge falls like morning dew — gentle, refreshing, and life-giving.",
+    "A premium intelligent learning platform combining AI tutoring, interactive learning, analytics, and personalized growth.",
   icons: {
     icon: "/aethera-logo.png",
     shortcut: "/aethera-logo.png",
     apple: "/aethera-logo.png",
   },
   openGraph: {
-    title: "AETHERA | Learn, Refreshed.",
+    title: "Aethera — Learn Smarter With AI",
     description:
-      "A premium, organic learning management system where knowledge falls like morning dew — gentle, refreshing, and life-giving.",
+      "A premium intelligent learning platform combining AI tutoring, interactive learning, analytics, and personalized growth.",
     type: "website",
-    images: [
-      {
-        url: "/aethera-logo-3d.png",
-        width: 1024,
-        height: 1024,
-        alt: "Aethera 3D Logo",
-      },
-    ],
   },
 };
 
@@ -43,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
-      <body className="min-h-screen antialiased bg-morning-mist text-deep-moss font-sans">
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <body className="min-h-screen antialiased bg-bg-primary text-text-primary font-sans">
         {children}
       </body>
     </html>
