@@ -43,33 +43,33 @@ const inProgressColor = (i: number) => {
 export default function DashboardPage() {
   const recentCourses = [
     {
-      title: "Advanced React Patterns",
-      progress: 62,
-      lectures: "12/19",
+      title: "Machine Learning Engineering for Production",
+      progress: 68,
+      lectures: "17/25",
     },
     {
-      title: "Data Structures & Algorithms",
-      progress: 34,
-      lectures: "8/24",
+      title: "Distributed Systems Architecture",
+      progress: 42,
+      lectures: "14/33",
     },
     {
-      title: "System Design Fundamentals",
-      progress: 78,
-      lectures: "14/18",
+      title: "Advanced Cloud-Native Patterns",
+      progress: 86,
+      lectures: "36/42",
     },
   ];
 
   const recentNotes = [
-    { title: "useReducer vs useState", time: "2h ago" },
-    { title: "Binary Search Variants", time: "5h ago" },
-    { title: "Database Indexing Strategies", time: "1d ago" },
+    { title: "Consensus Algorithms (Raft vs Paxos)", time: "2h ago" },
+    { title: "Microservices Deployment Strategies", time: "5h ago" },
+    { title: "Model Serving Latency Optimization", time: "1d ago" },
   ];
 
   const upcomingTasks = [
-    { title: "Complete React Quiz", due: "Today", priority: "high" },
-    { title: "DSA Problem Set 4", due: "Tomorrow", priority: "medium" },
-    { title: "Review System Design Notes", due: "In 2 days", priority: "low" },
-    { title: "Plan Study Schedule", due: "This week", priority: "low" },
+    { title: "Complete Distributed Tracing Lab", due: "Today", priority: "high" },
+    { title: "Review ML Pipeline Architecture", due: "Tomorrow", priority: "medium" },
+    { title: "Read CAP Theorem Paper", due: "In 2 days", priority: "low" },
+    { title: "Design High Availability DB Schema", due: "This week", priority: "low" },
   ];
 
   const weeklyData = [40, 65, 35, 80, 55, 25, 45];

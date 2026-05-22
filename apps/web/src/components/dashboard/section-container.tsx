@@ -21,23 +21,24 @@ export function SectionContainer({
   return (
     <section className={cn("", className)}>
       {(title || action) && (
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex flex-col gap-1">
+        <div className="flex items-end justify-between mb-6">
+          <div className="flex flex-col gap-1.5">
             {title && (
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-accent/60 shrink-0" />
-                <h2 className="text-[11px] font-heading font-bold uppercase tracking-[0.15em] text-text-primary/70">
+                <div className="w-0.5 h-4 rounded-full bg-accent/50 shrink-0" />
+                <h2 className="text-[10px] font-heading font-bold uppercase tracking-[0.18em] text-text-primary/70">
                   {title}
                 </h2>
               </div>
             )}
             {subtitle && (
-              <p className="text-xs text-text-secondary/40 font-medium pl-4.5">
+              <p className="text-xs text-text-secondary/40 font-medium ml-3.5">
                 {subtitle}
               </p>
             )}
           </div>
-          {action && <div className="shrink-0 pl-4">{action}</div>}
+          <div className="flex-1 mx-6 h-px bg-gradient-to-r from-white/[0.02] via-white/[0.04] to-transparent self-center mb-px" />
+          {action && <div className="shrink-0">{action}</div>}
         </div>
       )}
       {children}
