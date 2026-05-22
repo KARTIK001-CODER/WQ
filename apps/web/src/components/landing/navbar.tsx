@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 const links = [
   { label: "Features", href: "#features" },
@@ -33,7 +34,7 @@ export default function Navbar() {
               : "bg-transparent"
           }`}
         >
-          <a href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md shadow-sm border border-border-subtle">
               <img 
                 src="/aethera-logo.png?v=2" 
@@ -44,7 +45,7 @@ export default function Navbar() {
             <span className="font-heading text-sm font-semibold tracking-widest text-text-primary">
               AETHERA
             </span>
-          </a>
+          </Link>
 
           <div className="hidden items-center gap-8 md:flex">
             {links.map((link) => (

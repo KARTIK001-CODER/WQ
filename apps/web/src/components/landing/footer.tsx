@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const footerLinks = [
   {
     label: "Product",
@@ -43,7 +45,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-12 lg:px-20">
         <div className="grid gap-10 md:grid-cols-5">
           <div className="md:col-span-2">
-            <a href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md shadow-sm border border-border-subtle">
                 <img 
                   src="/aethera-logo.png?v=2" 
@@ -54,7 +56,7 @@ export default function Footer() {
               <span className="font-heading text-sm font-semibold tracking-widest text-text-primary">
                 AETHERA
               </span>
-            </a>
+            </Link>
             <p className="mt-4 max-w-xs font-sans text-sm leading-relaxed text-text-secondary">
               A premium intelligent learning platform combining AI tutoring,
               interactive learning, and personalized growth.
