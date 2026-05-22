@@ -19,13 +19,13 @@ const paddingMap = {
 
 const variantClasses = {
   default:
-    "bg-bg-layer border border-border-subtle shadow-surface",
+    "bg-gradient-to-b from-bg-layer to-bg-secondary/40 border border-white/[0.03] shadow-card ring-1 ring-white/[0.01]",
   elevated:
-    "bg-bg-secondary border border-border-mid shadow-raised",
+    "bg-gradient-to-b from-bg-elevated to-bg-layer border border-white/[0.05] shadow-raised ring-1 ring-white/[0.02]",
   primary:
-    "bg-bg-elevated border border-border-active shadow-elevated",
+    "bg-gradient-to-b from-bg-layer via-bg-layer to-accent/[0.02] border border-accent/20 shadow-elevated ring-1 ring-accent/[0.05]",
   utility:
-    "bg-bg-layer border border-border-subtle shadow-surface",
+    "bg-bg-secondary/80 border border-white/[0.02] shadow-surface backdrop-blur-md",
 };
 
 export function DashboardCard({
@@ -36,19 +36,23 @@ export function DashboardCard({
 }: DashboardCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ type: "spring", stiffness: 260, damping: 25 }}
       whileHover={{
-        y: -3,
-        transition: { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] },
+        y: -4,
+        scale: 1.004,
+        shadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+        transition: { type: "spring", stiffness: 400, damping: 28 },
       }}
       className={cn(
-        "rounded-xl will-change-transform",
+        "rounded-xl will-change-transform transition-colors duration-300 relative overflow-hidden",
         variantClasses[variant],
         className
       )}
     >
+      {/* Subtle top sheen line */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.04] to-transparent pointer-events-none" />
       <div className={cn(paddingMap[padding])}>{children}</div>
     </motion.div>
   );
