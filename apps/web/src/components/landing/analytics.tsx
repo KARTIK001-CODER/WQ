@@ -42,10 +42,10 @@ export default function Analytics() {
 
           <div className="grid gap-px bg-border-subtle/30 md:grid-cols-3">
             {[
-              { label: "Focus Score", value: "87", unit: "%", change: "+5%", up: true },
-              { label: "Study Time", value: "42", unit: "hrs", change: "+12%", up: true },
-              { label: "Courses Active", value: "3", unit: "", change: "On track", up: true },
-            ].map(({ label, value, unit, change, up }) => (
+              { label: "Focus Score", value: "87", unit: "%", change: "+5%" },
+              { label: "Study Time", value: "42", unit: "hrs", change: "+12%" },
+              { label: "Courses Active", value: "3", unit: "", change: "On track" },
+            ].map(({ label, value, unit, change }) => (
               <div key={label} className="bg-bg-secondary p-8">
                 <p className="font-sans text-sm text-text-secondary">{label}</p>
                 <div className="mt-2 flex items-baseline gap-1">

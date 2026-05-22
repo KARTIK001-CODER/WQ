@@ -42,7 +42,7 @@ export function DashboardCard({
       whileHover={{
         y: -4,
         scale: 1.004,
-        shadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
         transition: { type: "spring", stiffness: 400, damping: 28 },
       }}
       className={cn(

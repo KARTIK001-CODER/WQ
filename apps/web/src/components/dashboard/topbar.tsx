@@ -13,30 +13,30 @@ export function Topbar() {
   const { toggleMobileSidebar } = useDashboard();
 
   return (
-    <header className="h-[56px] flex items-center justify-between px-6 lg:px-8 border-b border-border-subtle/50 bg-bg-primary/70 backdrop-blur-xl shrink-0">
+    <header className="h-[56px] flex items-center justify-between px-6 lg:px-8 border-b border-white/[0.03] bg-bg-primary/40 backdrop-blur-xl shrink-0 relative z-30">
       {/* Left */}
       <div className="flex items-center gap-5 flex-1 min-w-0">
         <button
           suppressHydrationWarning
           onClick={toggleMobileSidebar}
-          className="md:hidden text-text-secondary/60 hover:text-text-primary transition-colors p-1.5 rounded-md hover:bg-hover-bg"
+          className="md:hidden text-text-secondary/50 hover:text-text-primary transition-all duration-300 p-1.5 rounded-lg bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.03] hover:border-white/[0.06]"
           aria-label="Open menu"
         >
-          <List size={20} />
+          <List size={16} />
         </button>
 
-        <div className="relative flex items-center flex-1 max-w-sm">
+        <div className="relative flex items-center flex-1 max-w-sm group">
           <MagnifyingGlass
             size={14}
-            className="absolute left-3 text-text-secondary/40 pointer-events-none"
+            className="absolute left-3 text-text-secondary/40 group-focus-within:text-accent transition-colors duration-300 pointer-events-none z-10"
           />
           <input
             suppressHydrationWarning
             type="text"
             placeholder="Search..."
-            className="w-full bg-bg-layer/50 border border-border-subtle rounded-lg pl-9 pr-3 py-[7px] text-sm text-text-primary placeholder:text-text-secondary/30 outline-none transition-all duration-200 focus:border-border-mid focus:bg-bg-layer focus:shadow-surface"
+            className="w-full bg-black/20 hover:bg-black/30 border border-white/[0.03] hover:border-white/[0.06] focus:border-accent/40 rounded-lg pl-9 pr-12 py-[7px] text-xs font-medium text-text-primary placeholder:text-text-secondary/35 outline-none transition-all duration-300 focus:bg-black/40 focus:ring-1 focus:ring-accent/10 focus:shadow-[0_0_15px_rgba(196,106,58,0.03)]"
           />
-          <kbd className="absolute right-2.5 hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium text-text-secondary/40 bg-bg-secondary/50 border border-border-subtle rounded">
+          <kbd className="absolute right-2.5 hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-text-secondary/30 bg-white/[0.02] border border-white/[0.04] rounded-md shadow-sm">
             <span>⌘</span>K
           </kbd>
         </div>
@@ -46,21 +46,22 @@ export function Topbar() {
       <div className="flex items-center gap-2">
         {/* XP & Streak */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-bg-layer/50 border border-border-subtle/50"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02, y: -1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/[0.01] hover:bg-white/[0.02] border border-white/[0.03] hover:border-white/[0.06] shadow-card ring-1 ring-white/[0.01] transition-all duration-300 cursor-pointer"
         >
           <div className="flex items-center gap-1.5">
-            <Star size={12} weight="fill" className="text-accent" />
-            <span className="text-xs text-text-secondary/60">
-              <span className="text-accent font-medium">1,280</span>
+            <Star size={12} weight="fill" className="text-accent animate-pulse-glow" />
+            <span className="text-[11px] font-bold text-text-secondary/50 tracking-wide uppercase">
+              <span className="text-text-primary font-extrabold tracking-normal">1,280</span> XP
             </span>
           </div>
-          <div className="w-px h-3.5 bg-border-mid/50" />
+          <div className="w-px h-3 bg-white/[0.06]" />
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-text-secondary/60">
-              <span className="text-accent-soft font-medium">7</span> day streak
+            <span className="text-[11px] font-bold text-text-secondary/50 tracking-wide uppercase">
+              <span className="text-accent-soft font-extrabold tracking-normal">7</span> Day Streak
             </span>
           </div>
         </motion.div>
@@ -70,12 +71,14 @@ export function Topbar() {
           suppressHydrationWarning
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.13 }}
-          className="relative p-2 rounded-lg text-text-secondary/50 hover:text-text-secondary hover:bg-hover-bg transition-all duration-200"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="relative p-2 rounded-lg text-text-secondary/50 hover:text-text-primary bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.03] hover:border-white/[0.06] shadow-card ring-1 ring-white/[0.01] transition-all duration-300"
           aria-label="Notifications"
         >
-          <Bell size={17} />
-          <span className="absolute top-1.5 right-1.5 w-[7px] h-[7px] rounded-full bg-accent ring-[3px] ring-bg-primary" />
+          <Bell size={15} weight="duotone" />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent ring-[2px] ring-bg-secondary" />
         </motion.button>
 
         {/* Profile */}
@@ -83,14 +86,17 @@ export function Topbar() {
           suppressHydrationWarning
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.16 }}
-          className="flex items-center gap-2.5 p-1.5 pl-2 rounded-lg hover:bg-hover-bg transition-all duration-200"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="flex items-center gap-2.5 p-1 pl-1.5 pr-2.5 rounded-lg bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.03] hover:border-white/[0.06] shadow-card ring-1 ring-white/[0.01] transition-all duration-300 cursor-pointer"
           aria-label="Profile"
         >
-          <div className="w-[26px] h-[26px] rounded-full bg-gradient-to-br from-accent-support/40 to-accent-support/20 flex items-center justify-center ring-1 ring-white/[0.04]">
-            <span className="text-[9px] font-semibold text-accent-soft/90">AK</span>
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-support/30 to-accent-support/10 flex items-center justify-center ring-1 ring-white/[0.08] shadow-inner relative overflow-hidden shrink-0">
+            <span className="text-[9px] font-bold text-accent-soft/85 relative z-10">AK</span>
+            <div className="absolute inset-0 bg-black/10" />
           </div>
-          <span className="hidden sm:block text-sm text-text-primary/80 font-medium">
+          <span className="hidden sm:block text-xs font-semibold text-text-primary/90">
             Alex
           </span>
         </motion.button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   BookmarkSimple,
   Play,
@@ -15,16 +15,17 @@ import {
   Clock,
   ArrowRight,
   Flame,
-  Check,
 } from "@phosphor-icons/react";
 
 function useGreeting() {
   const [greeting, setGreeting] = useState("Good morning");
   useEffect(() => {
     const hour = new Date().getHours();
-    setGreeting(
-      hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
-    );
+    const resolved = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+    const timer = setTimeout(() => {
+      setGreeting(resolved);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
   return greeting;
 }
