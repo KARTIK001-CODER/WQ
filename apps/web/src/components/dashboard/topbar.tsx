@@ -17,6 +17,7 @@ export function Topbar() {
       {/* Left */}
       <div className="flex items-center gap-5 flex-1 min-w-0">
         <button
+          suppressHydrationWarning
           onClick={toggleMobileSidebar}
           className="md:hidden text-text-secondary/60 hover:text-text-primary transition-colors p-1.5 rounded-md hover:bg-hover-bg"
           aria-label="Open menu"
@@ -30,6 +31,7 @@ export function Topbar() {
             className="absolute left-3 text-text-secondary/40 pointer-events-none"
           />
           <input
+            suppressHydrationWarning
             type="text"
             placeholder="Search..."
             className="w-full bg-bg-layer/50 border border-border-subtle rounded-lg pl-9 pr-3 py-[7px] text-sm text-text-primary placeholder:text-text-secondary/30 outline-none transition-all duration-200 focus:border-border-mid focus:bg-bg-layer focus:shadow-surface"
@@ -65,6 +67,7 @@ export function Topbar() {
 
         {/* Notifications */}
         <motion.button
+          suppressHydrationWarning
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.13 }}
@@ -77,6 +80,7 @@ export function Topbar() {
 
         {/* Profile */}
         <motion.button
+          suppressHydrationWarning
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.16 }}

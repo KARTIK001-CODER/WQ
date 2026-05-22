@@ -4,58 +4,60 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-heading: "Space Grotesk", system-ui, sans-serif;
 
-  --color-bg-primary: #0A0A0A;
-  --color-bg-secondary: #111111;
-  --color-bg-layer: #171717;
-  --color-bg-elevated: #1C1C1C;
-  --color-text-primary: #FAFAF9;
-  --color-text-secondary: #D4D4D4;
+  --color-bg-primary: #050505;
+  --color-bg-secondary: #0A0A0A;
+  --color-bg-layer: #0F0F0F;
+  --color-bg-elevated: #141414;
+  --color-text-primary: #F5F5F3;
+  --color-text-secondary: #A3A3A3;
   --color-accent: #C46A3A;
   --color-accent-soft: #D6C2A1;
   --color-accent-support: #5F7A65;
-  --color-border-subtle: #1A1A1A;
-  --color-border-mid: #252525;
-  --color-border-active: #2A2A2A;
-  --color-hover-bg: #1C1C1C;
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-mid: rgba(255, 255, 255, 0.06);
+  --color-border-active: rgba(255, 255, 255, 0.1);
+  --color-hover-bg: rgba(255, 255, 255, 0.02);
 
-  --shadow-surface: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.6), 0 12px 40px rgba(0, 0, 0, 0.5);
-  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 30px rgba(196, 106, 58, 0.15), 0 0 60px rgba(196, 106, 58, 0.05);
-  --shadow-glow-strong: 0 0 40px rgba(196, 106, 58, 0.2), 0 0 80px rgba(196, 106, 58, 0.08);
+  --shadow-surface: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.02);
+  --shadow-raised: 0 8px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
+  --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+  --shadow-deep: 0 30px 60px rgba(0, 0, 0, 0.9);
+  --shadow-glow: 0 0 40px rgba(196, 106, 58, 0.08), 0 0 80px rgba(196, 106, 58, 0.03);
+  --shadow-glow-strong: 0 0 50px rgba(196, 106, 58, 0.12), 0 0 100px rgba(196, 106, 58, 0.05);
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: #050505;
 }
 
 body {
-  background-color: #0A0A0A;
-  color: #FAFAF9;
+  background-color: #050505;
+  color: #F5F5F3;
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: rgba(196, 106, 58, 0.3);
-  color: #FAFAF9;
+  background-color: rgba(196, 106, 58, 0.2);
+  color: #F5F5F3;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1A1A1A;
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #252525;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 @layer utilities {
@@ -65,10 +67,14 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.015;
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -78,20 +84,15 @@ body {
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes progressPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }
 
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(196, 106, 58, 0.1); }
-  50% { box-shadow: 0 0 40px rgba(196, 106, 58, 0.2); }
-}
-
-.animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
-.animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-.animate-scale-in { animation: scaleIn 0.5s ease-out forwards; }
+.animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
