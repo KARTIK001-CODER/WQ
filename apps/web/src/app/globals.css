@@ -7,6 +7,7 @@
   --color-bg-primary: #0A0A0A;
   --color-bg-secondary: #111111;
   --color-bg-layer: #171717;
+  --color-bg-elevated: #1C1C1C;
   --color-text-primary: #FAFAF9;
   --color-text-secondary: #D4D4D4;
   --color-accent: #C46A3A;
@@ -14,12 +15,16 @@
   --color-accent-support: #5F7A65;
   --color-border-subtle: #1A1A1A;
   --color-border-mid: #252525;
+  --color-border-active: #2A2A2A;
   --color-hover-bg: #1C1C1C;
 
+  --shadow-surface: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
   --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.6), 0 12px 40px rgba(0, 0, 0, 0.5);
   --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   --shadow-glow: 0 0 30px rgba(196, 106, 58, 0.15), 0 0 60px rgba(196, 106, 58, 0.05);
+  --shadow-glow-strong: 0 0 40px rgba(196, 106, 58, 0.2), 0 0 80px rgba(196, 106, 58, 0.08);
 }
 
 html {
@@ -40,10 +45,10 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #1A1A1A;
@@ -75,6 +80,16 @@ body {
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(196, 106, 58, 0.1); }
+  50% { box-shadow: 0 0 40px rgba(196, 106, 58, 0.2); }
 }
 
 .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
