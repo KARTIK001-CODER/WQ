@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: <House size={18} weight="duotone" /> },
   { href: "/dashboard/courses", label: "My Courses", icon: <BookOpen size={18} weight="duotone" /> },
-  { href: "/dashboard/ai-tutor", label: "AI Tutor", icon: <Sparkle size={18} weight="duotone" /> },
+  { href: "/ai/tutor", label: "AI Tutor", icon: <Sparkle size={18} weight="duotone" /> },
   { href: "/dashboard/notes", label: "Notes", icon: <NotePencil size={18} weight="duotone" /> },
   { href: "/dashboard/planner", label: "Planner", icon: <CalendarDots size={18} weight="duotone" /> },
   { href: "/dashboard/analytics", label: "Analytics", icon: <ChartBar size={18} weight="duotone" /> },
