@@ -25,6 +25,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(196,106,58,0.25) 0%, rgba(95,122,101,0.15) 100%)",
     thumbnailIcon: "chart",
     status: "in-progress",
+    href: "/learn/course-1/lec-5",
   },
   {
     id: "2",
@@ -39,6 +40,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(95,122,101,0.25) 0%, rgba(196,106,58,0.1) 100%)",
     thumbnailIcon: "database",
     status: "in-progress",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "3",
@@ -53,6 +55,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(214,194,161,0.2) 0%, rgba(196,106,58,0.1) 100%)",
     thumbnailIcon: "brain",
     status: "in-progress",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "4",
@@ -67,6 +70,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(196,106,58,0.2) 0%, rgba(214,194,161,0.1) 100%)",
     thumbnailIcon: "atom",
     status: "in-progress",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "5",
@@ -81,6 +85,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(95,122,101,0.2) 0%, rgba(214,194,161,0.1) 100%)",
     thumbnailIcon: "atom",
     status: "recommended",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "6",
@@ -95,6 +100,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(214,194,161,0.25) 0%, rgba(95,122,101,0.1) 100%)",
     thumbnailIcon: "chart",
     status: "recommended",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "7",
@@ -109,6 +115,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(196,106,58,0.15) 0%, rgba(95,122,101,0.2) 100%)",
     thumbnailIcon: "brain",
     status: "recommended",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "8",
@@ -123,6 +130,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(196,106,58,0.2) 0%, rgba(95,122,101,0.15) 100%)",
     thumbnailIcon: "code",
     status: "completed",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "9",
@@ -137,6 +145,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(95,122,101,0.2) 0%, rgba(196,106,58,0.1) 100%)",
     thumbnailIcon: "database",
     status: "completed",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "10",
@@ -151,6 +160,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(214,194,161,0.2) 0%, rgba(95,122,101,0.15) 100%)",
     thumbnailIcon: "code",
     status: "completed",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "11",
@@ -165,6 +175,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(196,106,58,0.15) 0%, rgba(214,194,161,0.15) 100%)",
     thumbnailIcon: "pen",
     status: "saved",
+    href: "/learn/course-1/lec-1",
   },
   {
     id: "12",
@@ -179,6 +190,7 @@ const coursesData: CourseData[] = [
     thumbnailGradient: "linear-gradient(135deg, rgba(95,122,101,0.15) 0%, rgba(196,106,58,0.1) 100%)",
     thumbnailIcon: "database",
     status: "saved",
+    href: "/learn/course-1/lec-1",
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/cn";
 import {
@@ -25,6 +26,7 @@ export interface CourseData {
   thumbnailGradient: string;
   thumbnailIcon: "code" | "brain" | "database" | "chart" | "atom" | "pen";
   status: "in-progress" | "recommended" | "completed" | "saved";
+  href?: string;
 }
 
 const iconMap = {
@@ -42,6 +44,7 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course, index }: CourseCardProps) {
+  const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -212,6 +215,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
 
         {/* Action */}
         <motion.button
+          onClick={() => course.href && router.push(course.href)}
           whileHover={{ scale: 1.03, y: -1 }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 450, damping: 26 }}
