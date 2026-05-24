@@ -1,104 +1,204 @@
 "use client";
 
-import { use } from "react";
 import { motion } from "framer-motion";
 import { AIProvider } from "@/components/ai/ai-provider";
-import { AISidebar } from "@/components/ai/ai-sidebar";
 import { AIChatArea } from "@/components/ai/ai-chat-area";
-import { AIContextPanel } from "@/components/ai/ai-context-panel";
-import { ArrowLeft, Sidebar, Square } from "@phosphor-icons/react";
-import { useAI } from "@/components/ai/ai-provider";
-import { cn } from "@/lib/cn";
-
-function AITopbar() {
-  const { toggleSidebar, toggleContext, sidebarOpen, contextOpen } = useAI();
-
-  return (
-    <motion.header
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-      className="h-11 flex items-center justify-between px-4 border-b border-white/[0.02] bg-bg-primary/60 backdrop-blur-2xl relative z-30"
-    >
-      <div className="flex items-center gap-4">
-        <motion.a
-          href="/dashboard"
-          whileHover={{ x: -2 }}
-          className="flex items-center gap-1.5 text-text-secondary/35 hover:text-text-primary transition-colors duration-300 text-[11px] font-medium"
-        >
-          <ArrowLeft size={12} />
-          <span className="hidden sm:inline">Dashboard</span>
-        </motion.a>
-        <div className="w-px h-3.5 bg-white/[0.03]" />
-        <h1 className="text-[11px] font-heading font-semibold text-text-secondary/60 tracking-tight">
-          AI Tutor
-        </h1>
-      </div>
-
-      <div className="flex items-center gap-1">
-        <motion.button
-          onClick={toggleSidebar}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.9 }}
-          className={cn(
-            "p-1.5 rounded-md transition-all duration-300",
-            sidebarOpen
-              ? "text-accent bg-accent/10 border border-accent/20 shadow-[0_0_12px_rgba(196,106,58,0.08)]"
-              : "text-text-secondary/35 hover:text-text-primary hover:bg-white/[0.02] border border-transparent"
-          )}
-          title="Toggle history"
-        >
-          <Sidebar size={13} />
-        </motion.button>
-        <motion.button
-          onClick={toggleContext}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.9 }}
-          className={cn(
-            "p-1.5 rounded-md transition-all duration-300",
-            contextOpen
-              ? "text-accent bg-accent/10 border border-accent/20 shadow-[0_0_12px_rgba(196,106,58,0.08)]"
-              : "text-text-secondary/35 hover:text-text-primary hover:bg-white/[0.02] border border-transparent"
-          )}
-          title="Toggle context panel"
-        >
-          <Square size={13} />
-        </motion.button>
-      </div>
-    </motion.header>
-  );
-}
+import { ArrowLeft, Robot } from "@phosphor-icons/react";
+import Link from "next/link";
 
 export default function AITutorPage() {
   return (
     <AIProvider>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className="flex flex-col w-full h-screen bg-bg-primary overflow-hidden"
+      <div
+        className="flex flex-col w-full h-screen overflow-hidden"
+        style={{ backgroundColor: "#F6F3EE" }}
       >
-        {/* Dot grid background */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.012]"
+        {/* AI Tutor Topbar */}
+        <motion.header
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="shrink-0 h-[60px] flex items-center justify-between px-6"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
-            backgroundSize: "24px 24px",
+            backgroundColor: "#18211E",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
           }}
-        />
+        >
+          <div className="flex items-center gap-4">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-1.5 text-xs font-medium transition-colors duration-150"
+              style={{ color: "rgba(255,255,255,0.4)" }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.color =
+                  "rgba(255,255,255,0.75)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.color =
+                  "rgba(255,255,255,0.4)")
+              }
+            >
+              <ArrowLeft size={13} />
+              Dashboard
+            </Link>
 
-        {/* Ambient glow */}
-        <div className="absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-accent/[0.02] rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent-support/[0.015] rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+            <div
+              className="w-px h-4"
+              style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+            />
 
-        <AITopbar />
+            <div className="flex items-center gap-2">
+              <Robot size={15} style={{ color: "#5C7A9B" }} />
+              <span
+                className="text-sm font-semibold"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 300,
+                  color: "rgba(255,255,255,0.85)",
+                }}
+              >
+                AI Tutor
+              </span>
+              <span
+                className="text-[10px] font-semibold tracking-widest uppercase px-2 py-0.5 rounded"
+                style={{
+                  backgroundColor: "rgba(92,122,155,0.15)",
+                  color: "#5C7A9B",
+                }}
+              >
+                Aethera AI
+              </span>
+            </div>
+          </div>
 
-        <div className="flex-1 flex overflow-hidden relative">
-          <AISidebar />
-          <AIChatArea />
-          <AIContextPanel />
+          <div className="flex items-center gap-2">
+            <span
+              className="text-[10px] font-semibold tracking-widest uppercase"
+              style={{ color: "rgba(255,255,255,0.25)" }}
+            >
+              Distributed Systems — Session 3
+            </span>
+          </div>
+        </motion.header>
+
+        {/* Chat area */}
+        <div
+          className="flex-1 flex overflow-hidden"
+          style={{ backgroundColor: "#F6F3EE" }}
+        >
+          {/* Left sidebar — session history */}
+          <motion.aside
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="w-[240px] shrink-0 flex flex-col h-full overflow-hidden"
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRight: "1px solid rgba(30,30,28,0.08)",
+            }}
+          >
+            <div
+              className="px-5 py-4 flex items-center justify-between"
+              style={{ borderBottom: "1px solid rgba(30,30,28,0.07)" }}
+            >
+              <span
+                className="text-[10px] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: "#6B6B68" }}
+              >
+                History
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-2">
+              {[
+                { title: "Raft vs Paxos consensus", time: "2h ago", active: true },
+                { title: "CAP theorem explained", time: "Yesterday" },
+                { title: "gRPC vs REST trade-offs", time: "2d ago" },
+                { title: "Database sharding strategies", time: "3d ago" },
+                { title: "Event sourcing patterns", time: "1w ago" },
+              ].map((session, i) => (
+                <button
+                  key={i}
+                  className="w-full text-left px-5 py-3 transition-all duration-150"
+                  style={{
+                    backgroundColor: session.active
+                      ? "rgba(92,122,155,0.08)"
+                      : "transparent",
+                    borderLeft: session.active
+                      ? "3px solid #5C7A9B"
+                      : "3px solid transparent",
+                    borderBottom: "1px solid rgba(30,30,28,0.04)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!session.active) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor =
+                        "rgba(30,30,28,0.025)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!session.active) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor =
+                        "transparent";
+                    }
+                  }}
+                >
+                  <p
+                    className="text-xs font-medium truncate"
+                    style={{ color: "#1E1E1C" }}
+                  >
+                    {session.title}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5 uppercase tracking-wider font-semibold"
+                    style={{ color: "#A8A8A5" }}
+                  >
+                    {session.time}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </motion.aside>
+
+          {/* Main chat */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="flex-1 flex flex-col overflow-hidden"
+            style={{ backgroundColor: "#F6F3EE" }}
+          >
+            {/* Context header */}
+            <div
+              className="shrink-0 px-6 py-3 flex items-center gap-3"
+              style={{
+                backgroundColor: "rgba(92,122,155,0.06)",
+                borderBottom: "1px solid rgba(92,122,155,0.12)",
+              }}
+            >
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: "#5C7A9B" }}
+              />
+              <span
+                className="text-[11px] font-semibold"
+                style={{ color: "#5C7A9B" }}
+              >
+                Context:
+              </span>
+              <span
+                className="text-[11px]"
+                style={{ color: "#6B6B68" }}
+              >
+                Distributed Systems Architecture · Lecture 14 — Consensus Algorithms
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-hidden">
+              <AIChatArea />
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </AIProvider>
   );
 }

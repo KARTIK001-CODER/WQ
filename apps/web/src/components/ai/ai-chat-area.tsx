@@ -1,298 +1,271 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/cn";
-import {
-  Sparkle,
-  PaperPlaneTilt,
-  Brain,
-  NotePencil,
-  Exam,
-  ArrowsDownUp,
-  BookOpen,
-} from "@phosphor-icons/react";
-import { useAI } from "./ai-provider";
-import { smartActions, suggestedPrompts } from "./placeholder-data";
+import { Robot, PaperPlaneTilt, ArrowClockwise, BookOpen } from "@phosphor-icons/react";
 
-const actionIconMap: Record<string, typeof Brain> = {
-  explain: Brain,
-  summarize: BookOpen,
-  quiz: Exam,
-  simplify: ArrowsDownUp,
-  notes: NotePencil,
-};
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+}
 
-const placeholders = [
-  "Ask me anything about your course...",
-  "Explain a concept from your lecture...",
-  "Quiz me on today's topic...",
-  "Help me understand this better...",
-  "Create revision notes for me...",
+const initialMessages: Message[] = [
+  {
+    id: "1",
+    role: "assistant",
+    content:
+      "Hello. I'm your AI Tutor — here to help you understand concepts deeply, not just surface-level summaries. What are you working through today?",
+    timestamp: "Just now",
+  },
+];
+
+const suggestedPrompts = [
+  "Explain Raft consensus algorithm",
+  "What is the CAP theorem?",
+  "Difference between gRPC and REST",
+  "How does model quantization work?",
 ];
 
 export function AIChatArea() {
-  const { messages, sendMessage, streamingId } = useAI();
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
-  const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const chatRef = useRef<HTMLDivElement>(null);
+  const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Cycle placeholders
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Auto-scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamingId]);
+  }, [messages]);
 
-  const handleSend = useCallback(() => {
-    if (!input.trim()) return;
-    sendMessage(input.trim());
+  const sendMessage = (text: string) => {
+    if (!text.trim()) return;
+
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: text.trim(),
+      timestamp: "Just now",
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
-    inputRef.current?.focus();
-  }, [input, sendMessage]);
+    setIsTyping(true);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!chatRef.current) return;
-    const rect = chatRef.current.getBoundingClientRect();
-    setMousePos({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
-  }, []);
+    // Simulate AI response
+    setTimeout(() => {
+      setIsTyping(false);
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content:
+          "That's a thoughtful question. Let me walk you through this concept carefully. In distributed systems, this relates to fundamental trade-offs between consistency, availability, and partition tolerance. The key insight is that no system can guarantee all three simultaneously under network partitions...",
+        timestamp: "Just now",
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+    }, 1400);
+  };
 
   return (
-    <div
-      ref={chatRef}
-      onMouseMove={handleMouseMove}
-      className="flex-1 flex flex-col relative overflow-hidden"
-    >
-      {/* Cursor-reactive ambient glow */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000"
-        style={{
-          background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(196,106,58,0.025) 0%, transparent 50%)`,
-        }}
-      />
-
-      <div className="flex-1 overflow-y-auto scroll-smooth relative z-10">
-        <div className="max-w-3xl mx-auto px-6 py-8 space-y-4">
-          <AnimatePresence>
-            {messages.map((msg) => (
-              <ChatMessageBubble key={msg.id} message={msg} isStreaming={msg.id === streamingId} />
-            ))}
-          </AnimatePresence>
-
-          {/* Thinking indicator */}
-          {streamingId && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex gap-2.5">
-              <div className="w-7 h-7 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(196,106,58,0.06)]">
-                <Sparkle size={12} className="text-accent" weight="fill" />
-              </div>
-              <div className="px-4 py-3 rounded-2xl bg-white/[0.01] border border-white/[0.04]">
-                <div className="flex gap-1">
-                  {[0, 1, 2].map((i) => (
-                    <motion.span
-                      key={i}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-                      className="w-1.5 h-1.5 rounded-full bg-text-secondary/25"
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Show action cards when only welcome message */}
-          {messages.length === 1 && !streamingId && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-              <div className="mt-6 mb-4">
-                <p className="text-[10px] font-medium text-text-secondary/30 mb-3 tracking-wide">
-                  QUICK ACTIONS
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                  {smartActions.map((action) => {
-                    const Icon = actionIconMap[action.id] || Brain;
-                    return (
-                      <motion.button
-                        key={action.id}
-                        onClick={() => sendMessage(action.prompt)}
-                        whileHover={{ y: -2, scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                        className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white/[0.01] border border-white/[0.03] hover:bg-white/[0.02] hover:border-white/[0.06] transition-all duration-300 group"
-                      >
-                        <Icon size={16} className="text-accent/60 group-hover:text-accent transition-colors duration-300" />
-                        <span className="text-[10px] font-medium text-text-secondary/50 group-hover:text-text-secondary/80 text-center transition-colors duration-300">
-                          {action.label}
-                        </span>
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Suggested prompts */}
-              <div>
-                <p className="text-[10px] font-medium text-text-secondary/30 mb-2.5 tracking-wide">
-                  SUGGESTED
-                </p>
-                <div className="space-y-1.5">
-                  {suggestedPrompts.map((prompt) => (
-                    <motion.button
-                      key={prompt.text}
-                      onClick={() => sendMessage(prompt.text)}
-                      whileHover={{ x: 3 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-left hover:bg-white/[0.015] transition-all duration-200 group"
-                    >
-                      <span className="text-sm">{prompt.icon}</span>
-                      <span className="text-[11px] text-text-secondary/40 group-hover:text-text-secondary/70 transition-colors duration-200">
-                        {prompt.text}
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          <div ref={bottomRef} />
-        </div>
-      </div>
-
-      {/* Input area */}
-      <div className="relative z-20 border-t border-white/[0.02] bg-bg-primary/60 backdrop-blur-xl">
-        <div className="max-w-3xl mx-auto px-6 py-4">
-          <div className="relative flex items-end gap-2">
-            <div className="flex-1 relative">
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholders[placeholderIndex]}
-                rows={1}
-                className="w-full px-4 py-3 rounded-2xl bg-white/[0.01] border border-white/[0.04] text-[13px] text-text-primary placeholder:text-text-secondary/20 outline-none focus:border-accent/30 focus:ring-1 focus:ring-accent/10 transition-all duration-300 resize-none leading-relaxed"
-                style={{ minHeight: 48, maxHeight: 160 }}
-                onInput={(e) => {
-                  const el = e.currentTarget;
-                  el.style.height = "auto";
-                  el.style.height = Math.min(el.scrollHeight, 160) + "px";
-                }}
-              />
-            </div>
-            <motion.button
-              onClick={handleSend}
-              disabled={!input.trim()}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-3 rounded-xl bg-accent/10 border border-accent/20 text-accent disabled:opacity-20 disabled:cursor-not-allowed hover:bg-accent/20 transition-all duration-300 shadow-[0_0_15px_rgba(196,106,58,0.06)] shrink-0"
+    <div className="flex flex-col h-full">
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
+        <AnimatePresence initial={false}>
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className={msg.role === "user" ? "flex justify-end" : ""}
             >
-              <PaperPlaneTilt size={15} />
-            </motion.button>
-          </div>
-          <p className="text-[9px] text-text-secondary/20 text-center mt-2">
-            AI Tutor may produce inaccurate information. Verify important facts.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+              {msg.role === "assistant" ? (
+                // AI message — Slate Blue left-border card
+                <div
+                  className="max-w-[85%] rounded-lg px-5 py-4"
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid rgba(30,30,28,0.08)",
+                    borderLeft: "3px solid #5C7A9B",
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Robot size={13} style={{ color: "#5C7A9B" }} />
+                    <span
+                      className="text-[10px] font-semibold tracking-widest uppercase"
+                      style={{ color: "#5C7A9B" }}
+                    >
+                      Aethera AI
+                    </span>
+                    <span
+                      className="text-[10px] tracking-wider uppercase"
+                      style={{ color: "#C8C8C5" }}
+                    >
+                      · {msg.timestamp}
+                    </span>
+                  </div>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#1E1E1C" }}
+                  >
+                    {msg.content}
+                  </p>
+                </div>
+              ) : (
+                // User message — Ember left-border, right-aligned
+                <div
+                  className="max-w-[75%] rounded-lg px-5 py-4"
+                  style={{
+                    backgroundColor: "rgba(193, 98, 47, 0.06)",
+                    border: "1px solid rgba(193, 98, 47, 0.12)",
+                    borderRight: "3px solid #C1622F",
+                  }}
+                >
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#1E1E1C" }}
+                  >
+                    {msg.content}
+                  </p>
+                  <div className="flex justify-end mt-1.5">
+                    <span
+                      className="text-[10px] tracking-wider uppercase"
+                      style={{ color: "#A8A8A5" }}
+                    >
+                      {msg.timestamp}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
 
-function ChatMessageBubble({ message, isStreaming }: { message: { id: string; role: string; content: string }; isStreaming: boolean }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-      className={cn("flex gap-3", message.role === "user" ? "justify-end" : "justify-start")}
-    >
-      {message.role === "assistant" && (
-        <div className="w-7 h-7 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 mt-1 shadow-[0_0_12px_rgba(196,106,58,0.06)]">
-          <Sparkle size={12} className="text-accent" weight="fill" />
+        {/* Typing indicator */}
+        {isTyping && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 px-5 py-3 rounded-lg w-fit"
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid rgba(30,30,28,0.08)",
+              borderLeft: "3px solid #5C7A9B",
+            }}
+          >
+            <Robot size={13} style={{ color: "#5C7A9B" }} />
+            <div className="flex gap-1 items-center">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-1 h-1 rounded-full"
+                  style={{ backgroundColor: "#5C7A9B" }}
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Suggested prompts */}
+      {messages.length === 1 && (
+        <div className="px-6 pb-3">
+          <div className="flex flex-wrap gap-2">
+            {suggestedPrompts.map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => sendMessage(prompt)}
+                className="text-xs font-medium px-3 py-1.5 rounded-md transition-all duration-150"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid rgba(30,30,28,0.12)",
+                  color: "#6B6B68",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "#C1622F";
+                  (e.currentTarget as HTMLElement).style.color = "#C1622F";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(30,30,28,0.12)";
+                  (e.currentTarget as HTMLElement).style.color = "#6B6B68";
+                }}
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
         </div>
       )}
+
+      {/* Input area */}
       <div
-        className={cn(
-          "max-w-[75%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed",
-          message.role === "user"
-            ? "bg-accent/10 border border-accent/20 text-text-primary"
-            : "bg-white/[0.01] border border-white/[0.04] text-text-secondary/65"
-        )}
+        className="shrink-0 px-6 py-4"
+        style={{ borderTop: "1px solid rgba(30,30,28,0.08)" }}
       >
-        {message.content ? (
-          <StreamingText content={message.content} isStreaming={isStreaming} />
-        ) : null}
-      </div>
-    </motion.div>
-  );
-}
-
-function StreamingText({ content, isStreaming }: { content: string; isStreaming: boolean }) {
-  const [displayed, setDisplayed] = useState(isStreaming ? "" : content);
-
-  useEffect(() => {
-    if (!isStreaming) {
-      setDisplayed(content);
-      return;
-    }
-    let i = 0;
-    setDisplayed("");
-    const interval = setInterval(() => {
-      i++;
-      if (i <= content.length) {
-        setDisplayed(content.slice(0, i));
-      } else {
-        clearInterval(interval);
-      }
-    }, 15);
-    return () => clearInterval(interval);
-  }, [content, isStreaming]);
-
-  // Split by newlines and render markdown-like formatting
-  const lines = displayed.split("\n");
-  return (
-    <div className="space-y-2">
-      {lines.map((line, i) => {
-        if (!line.trim()) return <div key={i} className="h-2" />;
-        // Bold text
-        const parts = line.split(/(\*\*[^*]+\*\*)/g);
-        return (
-          <p key={i} className="leading-relaxed">
-            {parts.map((part, j) => {
-              if (part.startsWith("**") && part.endsWith("**")) {
-                return (
-                  <strong key={j} className="font-semibold text-text-primary/80">
-                    {part.slice(2, -2)}
-                  </strong>
-                );
+        <div
+          className="flex items-end gap-3 rounded-lg px-4 py-3 transition-all duration-150"
+          style={{
+            backgroundColor: "#FFFFFF",
+            border: "1px solid rgba(30,30,28,0.12)",
+          }}
+        >
+          <BookOpen size={16} className="shrink-0 mb-0.5" style={{ color: "#A8A8A5" }} />
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(input);
               }
-              return <span key={j}>{part}</span>;
-            })}
-          </p>
-        );
-      })}
+            }}
+            placeholder="Ask Aethera anything about your courses…"
+            rows={1}
+            className="flex-1 resize-none bg-transparent text-sm border-none outline-none"
+            style={{
+              color: "#1E1E1C",
+              lineHeight: 1.5,
+            }}
+          />
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setMessages(initialMessages)}
+              className="w-7 h-7 rounded-md flex items-center justify-center transition-colors duration-150"
+              style={{ color: "#A8A8A5" }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "#6B6B68")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "#A8A8A5")
+              }
+            >
+              <ArrowClockwise size={14} />
+            </button>
+            <button
+              onClick={() => sendMessage(input)}
+              disabled={!input.trim()}
+              className="w-7 h-7 rounded-md flex items-center justify-center text-white transition-opacity duration-150 disabled:opacity-40"
+              style={{ backgroundColor: "#C1622F" }}
+            >
+              <PaperPlaneTilt size={13} weight="fill" />
+            </button>
+          </div>
+        </div>
+        <p
+          className="mt-2 text-center text-[10px]"
+          style={{ color: "#C8C8C5" }}
+        >
+          AI responses are for learning assistance. Always verify critical information.
+        </p>
+      </div>
     </div>
   );
 }

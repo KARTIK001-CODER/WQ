@@ -1,14 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/cn";
-import {
-  BookmarkSimple,
-  Sparkle,
-  NotePencil,
-  ChatDots,
-  Plus,
-} from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import { ChatDots, BookmarkSimple, Plus } from "@phosphor-icons/react";
 import { useAI } from "./ai-provider";
 import { chatSessions, savedExplanations } from "./placeholder-data";
 
@@ -19,81 +12,136 @@ export function AISidebar() {
     <motion.aside
       layout
       initial={false}
-      animate={{ width: sidebarOpen ? 260 : 0, opacity: sidebarOpen ? 1 : 0 }}
-      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-      className="overflow-hidden border-r border-white/[0.02] bg-bg-secondary/30 relative z-20 shrink-0"
+      animate={{ width: sidebarOpen ? 240 : 0, opacity: sidebarOpen ? 1 : 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="overflow-hidden shrink-0 flex flex-col"
+      style={{ borderRight: "1px solid rgba(30,30,28,0.08)", backgroundColor: "#FFFFFF" }}
     >
-      <div className="w-[260px] h-full flex flex-col">
+      <div className="w-[240px] h-full flex flex-col">
         {/* Header */}
-        <div className="px-4 pt-3.5 pb-3 border-b border-white/[0.02]">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <Sparkle size={12} className="text-accent" weight="fill" />
-              </div>
-              <span className="text-[13px] font-heading font-semibold text-text-primary/80">AI Tutor</span>
-            </div>
-          </div>
-          <motion.button
-            onClick={newChat}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-accent/10 border border-accent/20 text-[11px] font-bold text-accent hover:bg-accent/20 transition-all duration-300 shadow-[0_0_15px_rgba(196,106,58,0.06)]"
+        <div
+          className="px-5 py-4 flex items-center justify-between shrink-0"
+          style={{ borderBottom: "1px solid rgba(30,30,28,0.07)" }}
+        >
+          <span
+            className="text-[10px] font-semibold tracking-[0.14em] uppercase"
+            style={{ color: "#6B6B68" }}
           >
-            <Plus size={12} />
-            New Session
-          </motion.button>
+            History
+          </span>
+          <button
+            onClick={newChat}
+            className="w-6 h-6 rounded flex items-center justify-center transition-colors duration-150"
+            style={{ color: "#A8A8A5" }}
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLElement).style.color = "#1E1E1C")
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLElement).style.color = "#A8A8A5")
+            }
+          >
+            <Plus size={13} />
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto scroll-smooth">
+        <div className="flex-1 overflow-y-auto py-2">
           {/* Recent chats */}
-          <div className="px-3 pt-3 pb-2">
-            <h3 className="text-[9px] font-heading font-bold uppercase tracking-[0.15em] text-text-secondary/30 mb-2.5 px-1">
-              Recent Chats
-            </h3>
-            <div className="space-y-0.5">
-              {chatSessions.map((session) => (
-                <button
-                  key={session.id}
-                  className="w-full flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-left hover:bg-white/[0.02] transition-all duration-200 group"
-                >
-                  <ChatDots size={12} className="text-text-secondary/20 mt-0.5 shrink-0 group-hover:text-text-secondary/40 transition-colors duration-200" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] font-medium text-text-secondary/60 truncate group-hover:text-text-primary transition-colors duration-200">
-                        {session.title}
-                      </span>
-                      {session.pinned && <BookmarkSimple size={8} className="text-accent-soft/50 shrink-0" weight="fill" />}
-                    </div>
-                    <p className="text-[9px] text-text-secondary/25 truncate mt-0.5">{session.preview}</p>
-                  </div>
-                  <span className="text-[8px] text-text-secondary/20 shrink-0 mt-0.5">{session.timestamp}</span>
-                </button>
-              ))}
+          <div className="mb-4">
+            <div className="px-5 py-2">
+              <span
+                className="text-[9px] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: "#A8A8A5" }}
+              >
+                Recent
+              </span>
             </div>
+            {chatSessions.map((session, i) => (
+              <button
+                key={session.id}
+                className="w-full text-left px-5 py-3 transition-all duration-150"
+                style={{
+                  borderLeft: i === 0 ? "3px solid #5C7A9B" : "3px solid transparent",
+                  backgroundColor: i === 0 ? "rgba(92,122,155,0.06)" : "transparent",
+                  borderBottom: "1px solid rgba(30,30,28,0.04)",
+                }}
+                onMouseEnter={(e) => {
+                  if (i !== 0) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "rgba(30,30,28,0.025)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (i !== 0) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent";
+                  }
+                }}
+              >
+                <div className="flex items-start gap-2">
+                  <ChatDots
+                    size={12}
+                    className="shrink-0 mt-0.5"
+                    style={{ color: i === 0 ? "#5C7A9B" : "#A8A8A5" }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="text-xs font-medium truncate"
+                      style={{ color: "#1E1E1C" }}
+                    >
+                      {session.title}
+                    </p>
+                    <p
+                      className="text-[10px] mt-0.5 uppercase tracking-wider font-semibold"
+                      style={{ color: "#A8A8A5" }}
+                    >
+                      {session.timestamp}
+                    </p>
+                  </div>
+                  {session.pinned && (
+                    <BookmarkSimple
+                      size={10}
+                      weight="fill"
+                      className="shrink-0"
+                      style={{ color: "#C1622F" }}
+                    />
+                  )}
+                </div>
+              </button>
+            ))}
           </div>
 
-          {/* Saved explanations */}
-          <div className="px-3 pt-2 pb-3">
-            <h3 className="text-[9px] font-heading font-bold uppercase tracking-[0.15em] text-text-secondary/30 mb-2.5 px-1">
-              Saved Explanations
-            </h3>
-            <div className="space-y-0.5">
-              {savedExplanations.map((exp) => (
-                <button
-                  key={exp.id}
-                  className="w-full flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-left hover:bg-white/[0.02] transition-all duration-200 group"
-                >
-                  <NotePencil size={12} className="text-accent/30 mt-0.5 shrink-0 group-hover:text-accent/50 transition-colors duration-200" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[11px] font-medium text-text-secondary/60 truncate block group-hover:text-text-primary transition-colors duration-200">
-                      {exp.title}
-                    </span>
-                    <p className="text-[9px] text-text-secondary/25 truncate mt-0.5">{exp.preview}</p>
-                  </div>
-                </button>
-              ))}
+          {/* Saved */}
+          <div>
+            <div className="px-5 py-2">
+              <span
+                className="text-[9px] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: "#A8A8A5" }}
+              >
+                Saved Explanations
+              </span>
             </div>
+            {savedExplanations.map((exp) => (
+              <button
+                key={exp.id}
+                className="w-full text-left px-5 py-3 transition-all duration-150"
+                style={{ borderBottom: "1px solid rgba(30,30,28,0.04)" }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.backgroundColor =
+                    "rgba(30,30,28,0.025)")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.backgroundColor =
+                    "transparent")
+                }
+              >
+                <p className="text-xs font-medium truncate" style={{ color: "#1E1E1C" }}>
+                  {exp.title}
+                </p>
+                <p className="text-[10px] mt-0.5 truncate" style={{ color: "#A8A8A5" }}>
+                  {exp.preview}
+                </p>
+              </button>
+            ))}
           </div>
         </div>
       </div>

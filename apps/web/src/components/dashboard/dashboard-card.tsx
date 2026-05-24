@@ -1,31 +1,19 @@
-"use client";
-
-import { cn } from "@/lib/cn";
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface DashboardCardProps {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
-  variant?: "default" | "elevated" | "primary" | "utility";
+  variant?: "default" | "primary" | "accent" | "left-border";
   padding?: "sm" | "md" | "lg";
+  accentColor?: "ember" | "slate" | "moss";
+  style?: React.CSSProperties;
 }
 
 const paddingMap = {
-  sm: "p-4",
-  md: "p-6",
+  sm: "p-5",
+  md: "p-7",
   lg: "p-8",
-};
-
-const variantClasses = {
-  default:
-    "bg-gradient-to-b from-bg-layer to-bg-secondary/40 border border-white/[0.03] shadow-card ring-1 ring-white/[0.01]",
-  elevated:
-    "bg-gradient-to-b from-bg-elevated to-bg-layer border border-white/[0.05] shadow-raised ring-1 ring-white/[0.02]",
-  primary:
-    "bg-gradient-to-b from-bg-layer via-bg-layer to-accent/[0.02] border border-accent/20 shadow-elevated ring-1 ring-accent/[0.05]",
-  utility:
-    "bg-bg-secondary/80 border border-white/[0.02] shadow-surface backdrop-blur-md",
 };
 
 export function DashboardCard({
@@ -33,27 +21,45 @@ export function DashboardCard({
   className,
   variant = "default",
   padding = "md",
+  accentColor = "ember",
+  style,
 }: DashboardCardProps) {
+  const accentColors = {
+    ember: "#C1622F",
+    slate: "#5C7A9B",
+    moss: "#4E7C6B",
+  };
+
+  const borderStyles: Record<string, React.CSSProperties> = {
+    default: {
+      backgroundColor: "#FFFFFF",
+      border: "1px solid rgba(30, 30, 28, 0.08)",
+      borderRadius: "8px",
+    },
+    primary: {
+      backgroundColor: "#FFFFFF",
+      border: "1px solid rgba(30, 30, 28, 0.08)",
+      borderRadius: "8px",
+    },
+    accent: {
+      backgroundColor: "#FFFFFF",
+      border: "1px solid rgba(30, 30, 28, 0.08)",
+      borderRadius: "8px",
+    },
+    "left-border": {
+      backgroundColor: "#FFFFFF",
+      border: "1px solid rgba(30, 30, 28, 0.08)",
+      borderLeft: `3px solid ${accentColors[accentColor]}`,
+      borderRadius: "8px",
+    },
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25 }}
-      whileHover={{
-        y: -4,
-        scale: 1.004,
-        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
-        transition: { type: "spring", stiffness: 400, damping: 28 },
-      }}
-      className={cn(
-        "rounded-xl will-change-transform transition-colors duration-300 relative overflow-hidden",
-        variantClasses[variant],
-        className
-      )}
+    <div
+      className={cn(paddingMap[padding], className)}
+      style={{ ...borderStyles[variant], ...style }}
     >
-      {/* Subtle top sheen line */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.04] to-transparent pointer-events-none" />
-      <div className={cn(paddingMap[padding])}>{children}</div>
-    </motion.div>
+      {children}
+    </div>
   );
 }

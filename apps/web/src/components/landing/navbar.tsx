@@ -1,74 +1,140 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const links = [
-  { label: "Features", href: "#features" },
-  { label: "AI Tutor", href: "#ai" },
-  { label: "Analytics", href: "#analytics" },
+const navLinks = [
+  { label: "Philosophy", href: "#philosophy" },
+  { label: "Courses", href: "/dashboard/courses" },
+  { label: "Workspace", href: "#workspace" },
 ];
 
-export default function Navbar() {
+export function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
+    <motion.nav
+      initial={{ y: -8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] as const }}
-      className="fixed top-0 z-50 w-full"
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        backgroundColor: scrolled ? "#F6F3EE" : "transparent",
+        borderBottom:
+          scrolled
+            ? "1px solid rgba(30,30,28,0.10)"
+            : "1px solid transparent",
+      }}
     >
-      <div className="mx-auto max-w-7xl px-6 pt-5 md:px-12 lg:px-20">
-        <nav
-          className={`flex items-center justify-between rounded-lg px-5 py-3.5 transition-all duration-500 ${
-            scrolled
-              ? "bg-bg-secondary/80 shadow-card backdrop-blur-xl"
-              : "bg-transparent"
-          }`}
-        >
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md shadow-sm border border-border-subtle">
-              <img 
-                src="/aethera-logo.png?v=2" 
-                alt="Aethera Logo" 
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <span className="font-heading text-sm font-semibold tracking-widest text-text-primary">
-              AETHERA
-            </span>
-          </Link>
-
-          <div className="hidden items-center gap-8 md:flex">
-            {links.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-sans text-sm text-text-secondary transition-colors duration-200 hover:text-text-primary"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <motion.a
-            href="/register"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 font-sans text-sm font-medium text-white transition-colors duration-200 hover:bg-accent/90"
+      <div className="max-w-7xl mx-auto px-8 md:px-12 h-[64px] flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-[18px] h-[18px] rounded-[3px] bg-ember transition-transform duration-200 group-hover:scale-105" />
+          <span
+            className="text-lg tracking-tight text-ink font-display"
+            style={{ fontWeight: 300 }}
           >
-            Start Learning
-          </motion.a>
-        </nav>
+            Aethera
+          </span>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-10">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-sm text-ink-2 hover:text-ink transition-colors duration-200"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+
+        <Link
+          href="/register"
+          className="hidden md:inline-flex px-5 h-9 items-center rounded-md text-sm font-medium text-white bg-ember hover:opacity-90 transition-all duration-200"
+        >
+          Begin workspace
+        </Link>
+
+        <button
+          className="md:hidden text-ink p-1"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+        >
+          {mobileOpen ? (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M5 5L15 15M15 5L5 15"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M3 5H17"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M3 10H17"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M3 15H17"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
+        </button>
       </div>
-    </motion.header>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden px-8 pb-6 bg-bg border-t border-divider"
+          >
+            <div className="flex flex-col gap-5 pt-5">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-sm text-ink-2 hover:text-ink"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <div className="h-px bg-divider" />
+              <Link
+                href="/register"
+                className="text-sm font-medium text-ember"
+                onClick={() => setMobileOpen(false)}
+              >
+                Begin workspace &rarr;
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }

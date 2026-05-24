@@ -9,29 +9,44 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "bg-primary": "#050505",
-        "bg-secondary": "#0A0A0A",
-        "bg-layer": "#0F0F0F",
-        "bg-elevated": "#141414",
-        "text-primary": "#F5F5F3",
-        "text-secondary": "#A3A3A3",
-        accent: "#C46A3A",
-        "accent-soft": "#D6C2A1",
-        "accent-support": "#5F7A65",
-        "border-subtle": "rgba(255, 255, 255, 0.03)",
-        "border-mid": "rgba(255, 255, 255, 0.06)",
-        "border-active": "rgba(255, 255, 255, 0.1)",
-        "hover-bg": "rgba(255, 255, 255, 0.02)",
+        // Backgrounds
+        "bg": "#F6F3EE",
+        "surface": "#FFFFFF",
+        "sidebar": "#18211E",
+
+        // Semantic accents — three colors, three meanings
+        "ember": "#C1622F",        // Action only
+        "slate-ai": "#5C7A9B",     // AI / Intelligence only
+        "moss": "#4E7C6B",         // Completion / Growth only
+
+        // Text
+        "ink": "#1E1E1C",
+        "ink-2": "#6B6B68",
+        "ink-3": "#A8A8A5",
+
+        // Structural
+        "divider": "rgba(30, 30, 28, 0.12)",
+        "card-border": "rgba(30, 30, 28, 0.08)",
       },
       fontFamily: {
-        heading: ["var(--font-heading)", "sans-serif"],
-        sans: ["var(--font-sans)", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        ui: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 3px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.02)",
-        raised: "0 8px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.03)",
-        elevated: "0 12px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.04)",
-        glow: "0 0 40px rgba(196, 106, 58, 0.08), 0 0 80px rgba(196, 106, 58, 0.03)",
+        card: "0 1px 3px rgba(30, 30, 28, 0.06), 0 1px 2px rgba(30, 30, 28, 0.04)",
+        raised: "0 4px 16px rgba(30, 30, 28, 0.08)",
+        input: "0 1px 2px rgba(30, 30, 28, 0.05)",
+      },
+      borderRadius: {
+        sm: "4px",
+        DEFAULT: "6px",
+        md: "8px",
+        lg: "12px",
+      },
+      spacing: {
+        "card": "28px",
+        "card-sm": "20px",
       },
     },
   },
