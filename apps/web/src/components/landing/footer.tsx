@@ -1,105 +1,40 @@
+"use client";
+
 import Link from "next/link";
 
-const footerLinks = [
-  {
-    label: "Product",
-    links: [
-      { name: "Features", href: "#features" },
-      { name: "Pricing", href: "#" },
-      { name: "Courses", href: "#courses" },
-      { name: "Analytics", href: "#analytics" },
-    ],
-  },
-  {
-    label: "Company",
-    links: [
-      { name: "About", href: "#" },
-      { name: "Blog", href: "#" },
-      { name: "Careers", href: "#" },
-      { name: "Press", href: "#" },
-    ],
-  },
-  {
-    label: "Support",
-    links: [
-      { name: "Help Center", href: "#" },
-      { name: "Documentation", href: "#" },
-      { name: "API Status", href: "#" },
-      { name: "Contact", href: "#" },
-    ],
-  },
-  {
-    label: "Legal",
-    links: [
-      { name: "Privacy Policy", href: "#" },
-      { name: "Terms of Service", href: "#" },
-      { name: "Security", href: "#" },
-      { name: "Cookies", href: "#" },
-    ],
-  },
-];
+export function LandingFooter() {
+  const year = new Date().getFullYear();
 
-export default function Footer() {
   return (
-    <footer className="border-t border-border-subtle/30">
-      <div className="mx-auto max-w-7xl px-6 py-16 md:px-12 lg:px-20">
-        <div className="grid gap-10 md:grid-cols-5">
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md shadow-sm border border-border-subtle">
-                <img 
-                  src="/aethera-logo.png?v=2" 
-                  alt="Aethera Logo" 
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <span className="font-heading text-sm font-semibold tracking-widest text-text-primary">
-                AETHERA
-              </span>
-            </Link>
-            <p className="mt-4 max-w-xs font-sans text-sm leading-relaxed text-text-secondary">
-              A premium intelligent learning platform combining AI tutoring,
-              interactive learning, and personalized growth.
-            </p>
-            <div className="mt-6 flex items-center gap-3">
-              {["X", "LI", "GH", "DI"].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-layer text-xs text-text-secondary transition-all duration-200 hover:bg-accent/10 hover:text-accent"
-                >
-                  {social}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {footerLinks.map((group) => (
-            <div key={group.label}>
-              <h4 className="mb-4 font-sans text-xs font-semibold uppercase tracking-widest text-text-primary">
-                {group.label}
-              </h4>
-              <ul className="space-y-2.5">
-                {group.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="font-sans text-sm text-text-secondary transition-colors duration-200 hover:text-text-primary"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+    <footer className="bg-sidebar">
+      <div className="h-px bg-[rgba(193,98,47,0.08)]" />
+      <div className="max-w-7xl mx-auto px-8 md:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-[14px] h-[14px] rounded-[3px] bg-ember" />
+          <span
+            className="text-base text-[rgba(255,255,255,0.6)] font-display"
+            style={{ fontWeight: 300 }}
+          >
+            Aethera
+          </span>
         </div>
-
-        <div className="mt-16 border-t border-border-subtle/20 pt-8">
-          <p className="font-sans text-xs text-text-secondary">
-            &copy; {new Date().getFullYear()} Aethera. All rights reserved.
-          </p>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/privacy"
+            className="text-xs text-[rgba(255,255,255,0.25)] hover:text-[rgba(255,255,255,0.5)] transition-colors duration-150"
+          >
+            Privacy
+          </Link>
+          <Link
+            href="/terms"
+            className="text-xs text-[rgba(255,255,255,0.25)] hover:text-[rgba(255,255,255,0.5)] transition-colors duration-150"
+          >
+            Terms
+          </Link>
         </div>
+        <p className="text-[11px] text-[rgba(255,255,255,0.2)]">
+          &copy; {year} Aethera.
+        </p>
       </div>
     </footer>
   );

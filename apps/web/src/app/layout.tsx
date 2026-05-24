@@ -1,30 +1,34 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-display",
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Aethera — Learn Smarter With AI",
+  title: "Aethera — A Thoughtfully Crafted Learning Workspace",
   description:
-    "A premium intelligent learning platform combining AI tutoring, interactive learning, analytics, and personalized growth.",
+    "Aethera is a premium AI-powered learning platform that combines intelligent tutoring, editorial design, and deep focus tools into one thoughtfully crafted workspace.",
   icons: {
     icon: "/aethera-logo.png",
     shortcut: "/aethera-logo.png",
     apple: "/aethera-logo.png",
   },
   openGraph: {
-    title: "Aethera — Learn Smarter With AI",
+    title: "Aethera — A Thoughtfully Crafted Learning Workspace",
     description:
-      "A premium intelligent learning platform combining AI tutoring, interactive learning, analytics, and personalized growth.",
+      "Aethera is a premium AI-powered learning platform that combines intelligent tutoring, editorial design, and deep focus tools into one thoughtfully crafted workspace.",
     type: "website",
   },
 };
@@ -35,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen antialiased bg-bg-primary text-text-primary font-sans">
+    <html lang="en" className={`${dmSans.variable} ${fraunces.variable}`}>
+      <body className="min-h-screen antialiased bg-bg text-ink font-sans">
         {children}
       </body>
     </html>

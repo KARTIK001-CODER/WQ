@@ -1,33 +1,29 @@
 "use client";
 
-import { WelcomeSection } from "@/components/dashboard/placeholder-widgets";
-import { ContinueLearning } from "@/components/dashboard/placeholder-widgets";
-import { QuickActions } from "@/components/dashboard/placeholder-widgets";
-import { LearningStreak } from "@/components/dashboard/placeholder-widgets";
-import { ProductivityWidget } from "@/components/dashboard/placeholder-widgets";
+import type { Variants } from "framer-motion";
+
+import { motion } from "framer-motion";
+import {
+  WelcomeSection,
+  ContinueLearning,
+  QuickActions,
+  LearningStreak,
+  ProductivityWidget,
+} from "@/components/dashboard/placeholder-widgets";
 import { AnalyticsPreview } from "@/components/dashboard/analytics-preview";
 import { SectionContainer } from "@/components/dashboard/section-container";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
-import {
-  GraduationCap,
-  NotePencil,
-  ArrowRight,
-} from "@phosphor-icons/react";
-import { motion } from "framer-motion";
+import { NotePencil, ArrowRight, BookOpen } from "@phosphor-icons/react";
 
-const easing = [0.25, 0.1, 0.25, 1] as const;
+const easing = [0.16, 1, 0.3, 1] as const;
 
-const containerVariants = {
+const stagger: Variants = {
   initial: {},
-  animate: {
-    transition: {
-      staggerChildren: 0.06,
-    },
-  },
+  animate: { transition: { staggerChildren: 0.07 } },
 };
 
-const itemVariants = {
-  initial: { opacity: 0, y: 20 },
+const fadeUp: Variants = {
+  initial: { opacity: 0, y: 16 },
   animate: {
     opacity: 1,
     y: 0,
@@ -35,87 +31,87 @@ const itemVariants = {
   },
 };
 
-const inProgressColor = (i: number) => {
-  const colors = ["accent", "accent-support", "accent-soft"];
-  return colors[i % colors.length];
-};
+const recentNotes = [
+  { title: "Consensus Algorithms — Raft vs Paxos", time: "2h ago" },
+  { title: "Microservices Deployment Strategies", time: "5h ago" },
+  { title: "Model Serving Latency Optimization", time: "1d ago" },
+];
+
+const recentCourses = [
+  {
+    title: "Machine Learning Engineering for Production",
+    progress: 68,
+    lectures: "17 / 25",
+    color: "#C1622F",
+  },
+  {
+    title: "Distributed Systems Architecture",
+    progress: 42,
+    lectures: "14 / 33",
+    color: "#5C7A9B",
+  },
+  {
+    title: "Advanced Cloud-Native Patterns",
+    progress: 86,
+    lectures: "36 / 42",
+    color: "#4E7C6B",
+  },
+];
 
 export default function DashboardPage() {
-  const recentCourses = [
-    {
-      title: "Machine Learning Engineering for Production",
-      progress: 68,
-      lectures: "17/25",
-    },
-    {
-      title: "Distributed Systems Architecture",
-      progress: 42,
-      lectures: "14/33",
-    },
-    {
-      title: "Advanced Cloud-Native Patterns",
-      progress: 86,
-      lectures: "36/42",
-    },
-  ];
-
-  const recentNotes = [
-    { title: "Consensus Algorithms (Raft vs Paxos)", time: "2h ago" },
-    { title: "Microservices Deployment Strategies", time: "5h ago" },
-    { title: "Model Serving Latency Optimization", time: "1d ago" },
-  ];
-
-  const upcomingTasks = [
-    { title: "Complete Distributed Tracing Lab", due: "Today", priority: "high" },
-    { title: "Review ML Pipeline Architecture", due: "Tomorrow", priority: "medium" },
-    { title: "Read CAP Theorem Paper", due: "In 2 days", priority: "low" },
-    { title: "Design High Availability DB Schema", due: "This week", priority: "low" },
-  ];
-
-  const weeklyData = [40, 65, 35, 80, 55, 25, 45];
-
   return (
     <motion.div
       initial="initial"
       animate="animate"
-      variants={containerVariants}
-      className="max-w-7xl mx-auto pb-20 px-4 md:px-8 space-y-10"
+      variants={stagger}
+      className="max-w-6xl mx-auto pb-16 space-y-10"
     >
-      {/* Welcome */}
-      <motion.div variants={itemVariants}>
+      {/* ── Welcome ── */}
+      <motion.div variants={fadeUp}>
         <WelcomeSection />
       </motion.div>
 
-      {/* Continue Learning + Quick Actions */}
+      {/* ── Primary row: Continue Learning + Quick Actions ── */}
       <motion.div
-        variants={itemVariants}
-        className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 lg:gap-8"
+        variants={fadeUp}
+        className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6"
       >
-        <SectionContainer title="Continue Learning">
-          <ContinueLearning />
-        </SectionContainer>
-        <SectionContainer title="Quick Actions">
-          <QuickActions />
-        </SectionContainer>
+        <DashboardCard variant="default" padding="md">
+          <SectionContainer title="Continue Learning">
+            <ContinueLearning />
+          </SectionContainer>
+        </DashboardCard>
+
+        <DashboardCard variant="default" padding="md">
+          <SectionContainer title="Quick Actions">
+            <QuickActions />
+          </SectionContainer>
+        </DashboardCard>
       </motion.div>
 
-      {/* Analytics Preview */}
-      <motion.div variants={itemVariants}>
-        <SectionContainer
-          title="This Week"
-          subtitle="Your learning analytics dashboard"
+      {/* ── Analytics — intentionally full-width, dominant ── */}
+      <motion.div variants={fadeUp}>
+        <DashboardCard
+          variant="left-border"
+          accentColor="ember"
+          padding="md"
         >
-          <AnalyticsPreview />
-        </SectionContainer>
+          <SectionContainer
+            title="This Week"
+            subtitle="Your learning rhythm at a glance"
+          >
+            <AnalyticsPreview />
+          </SectionContainer>
+        </DashboardCard>
       </motion.div>
 
-      {/* Productivity + Streak */}
+      {/* ── Productivity + Streak ── */}
       <motion.div
-        variants={itemVariants}
-        className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-8"
+        variants={fadeUp}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        <DashboardCard variant="primary" padding="md">
-          <SectionContainer title="Focus Session">
+        <DashboardCard variant="default" padding="md">
+          <SectionContainer title="Today's Focus">
             <ProductivityWidget />
           </SectionContainer>
         </DashboardCard>
@@ -127,65 +123,92 @@ export default function DashboardPage() {
         </DashboardCard>
       </motion.div>
 
-      {/* In Progress + Weekly Activity */}
+      {/* ── In Progress + Recent Notes ── */}
       <motion.div
-        variants={itemVariants}
-        className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-8"
+        variants={fadeUp}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
+        {/* In Progress */}
         <DashboardCard variant="default" padding="md">
           <SectionContainer
             title="In Progress"
             action={
-              <button suppressHydrationWarning className="text-[10px] font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors flex items-center gap-1.5 px-2 py-1 rounded bg-white/[0.02] border border-white/[0.03]">
+              <a
+                href="/dashboard/courses"
+                className="flex items-center gap-1 text-[10px] font-semibold tracking-widest uppercase transition-colors duration-150"
+                style={{ color: "#A8A8A5" }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "#1E1E1C")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "#A8A8A5")
+                }
+              >
                 View all <ArrowRight size={10} />
-              </button>
+              </a>
             }
           >
-            <div className="space-y-4 mt-2">
+            <div className="space-y-4 mt-1">
               {recentCourses.map((course, i) => (
                 <motion.div
                   key={course.title}
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 + i * 0.05 }}
-                  className="group cursor-pointer p-2.5 -mx-2.5 rounded-xl hover:bg-white/[0.01] border border-transparent hover:border-white/[0.02] transition-all duration-300"
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: 0.1 + i * 0.05,
+                  }}
+                  className="group cursor-pointer"
                 >
-                  <div className="flex items-center gap-3.5 mb-2.5">
+                  <div className="flex items-start gap-2.5 mb-2">
                     <div
-                      className={`w-7 h-7 rounded-lg bg-${inProgressColor(
-                        i
-                      )}/10 border border-${inProgressColor(i)}/20 flex items-center justify-center shrink-0 shadow-inner`}
+                      className="w-5 h-5 rounded flex items-center justify-center shrink-0 mt-0.5"
+                      style={{ backgroundColor: `${course.color}15` }}
                     >
-                      <GraduationCap
-                        size={14}
-                        className={`text-${inProgressColor(i)}/85`}
-                      />
+                      <BookOpen size={11} style={{ color: course.color }} />
                     </div>
-                    <span className="text-sm font-semibold text-text-primary/90 group-hover:text-accent transition-colors duration-300 truncate">
+                    <p
+                      className="text-sm font-medium leading-snug flex-1 min-w-0"
+                      style={{ color: "#1E1E1C" }}
+                    >
                       {course.title}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between mb-1.5 ml-7">
+                    <span
+                      className="text-[10px] font-semibold uppercase tracking-wider"
+                      style={{ color: "#A8A8A5" }}
+                    >
+                      {course.lectures} lectures
+                    </span>
+                    <span
+                      className="text-[10px] font-semibold tabular-nums"
+                      style={{ color: "#6B6B68" }}
+                    >
+                      {course.progress}%
                     </span>
                   </div>
-                  
-                  <div className="flex items-center justify-between text-[10px] font-bold text-text-secondary/40 mb-2 ml-10">
-                    <span className="tabular-nums uppercase tracking-wide">{course.lectures} lectures</span>
-                    <span className="tabular-nums text-text-secondary/60">{course.progress}%</span>
-                  </div>
-                  
-                  <div className="ml-10 w-full h-[4px] rounded-full bg-bg-primary border border-white/[0.02] overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${course.progress}%` }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 80,
-                        damping: 18,
-                        delay: 0.2 + i * 0.05,
+                  <div className="ml-7">
+                    <div
+                      className="w-full rounded-full overflow-hidden"
+                      style={{
+                        height: "2px",
+                        backgroundColor: "rgba(30,30,28,0.08)",
                       }}
-                      className="h-full rounded-full relative"
-                      style={{ backgroundColor: `var(--color-${inProgressColor(i)})` }}
                     >
-                      <div className="absolute inset-0 bg-white/10 opacity-20" />
-                    </motion.div>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${course.progress}%` }}
+                        transition={{
+                          duration: 0.8,
+                          ease: [0.16, 1, 0.3, 1],
+                          delay: 0.2 + i * 0.08,
+                        }}
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: course.color }}
+                      />
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -193,154 +216,83 @@ export default function DashboardPage() {
           </SectionContainer>
         </DashboardCard>
 
-        <DashboardCard variant="default" padding="md">
-          <SectionContainer title="Weekly Activity">
-            <div className="flex items-end gap-2.5 h-32 pt-6">
-              {weeklyData.map((height, i) => {
-                const barColors = [
-                  "from-accent/60 to-accent/20",
-                  "from-accent-support/60 to-accent-support/20",
-                  "from-accent-soft/50 to-accent-soft/15",
-                  "from-accent/70 to-accent/30",
-                  "from-accent-support/50 to-accent-support/15",
-                  "from-accent-soft/40 to-accent-soft/10",
-                  "from-accent/50 to-accent/20",
-                ];
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: i * 0.04,
-                    }}
-                    className="flex-1 rounded-t-md bg-white/[0.01] border-x border-t border-white/[0.02] relative overflow-hidden cursor-pointer group/bar h-full"
-                  >
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: "100%" }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: i * 0.04,
-                      }}
-                      className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t ${barColors[i % barColors.length]} rounded-t-md`}
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 h-full rounded-t-md hover:bg-white/[0.03] transition-colors duration-300" />
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity duration-300 text-[10px] text-accent font-bold whitespace-nowrap tabular-nums">
-                      {height}h
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-            <div className="flex justify-between mt-4 text-[9px] font-bold text-text-secondary/40 uppercase tracking-wider px-1">
-              <span>Mon</span>
-              <span>Tue</span>
-              <span>Wed</span>
-              <span>Thu</span>
-              <span>Fri</span>
-              <span>Sat</span>
-              <span>Sun</span>
-            </div>
-          </SectionContainer>
-        </DashboardCard>
-      </motion.div>
-
-      {/* Notes + Upcoming */}
-      <motion.div
-        variants={itemVariants}
-        className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 lg:gap-8"
-      >
+        {/* Recent Notes */}
         <DashboardCard variant="default" padding="md">
           <SectionContainer
             title="Recent Notes"
             action={
-              <button suppressHydrationWarning className="text-[10px] font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors flex items-center gap-1.5 px-2 py-1 rounded bg-white/[0.02] border border-white/[0.03]">
+              <a
+                href="/dashboard/notes"
+                className="flex items-center gap-1 text-[10px] font-semibold tracking-widest uppercase transition-colors duration-150"
+                style={{ color: "#A8A8A5" }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "#1E1E1C")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "#A8A8A5")
+                }
+              >
                 View all <ArrowRight size={10} />
-              </button>
+              </a>
             }
           >
-            <div className="space-y-1 mt-2">
-              {recentNotes.map((note, i) => (
-                <motion.div
-                  key={note.title}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: i * 0.04 }}
-                  className="flex items-center gap-3.5 p-3 rounded-xl hover:bg-white/[0.01] border border-transparent hover:border-white/[0.02] transition-all duration-300 cursor-pointer group"
+            {recentNotes.length === 0 ? (
+              <div className="py-8 text-center">
+                <p
+                  className="text-sm"
+                  style={{ color: "#A8A8A5", fontStyle: "italic" }}
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white/[0.02] border border-white/[0.04] flex items-center justify-center shrink-0 group-hover:bg-accent/[0.06] group-hover:border-accent/20 transition-all duration-300">
+                  Your thoughts are waiting to be written.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-1 mt-1">
+                {recentNotes.map((note, i) => (
+                  <motion.div
+                    key={note.title}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: [0.16, 1, 0.3, 1],
+                      delay: i * 0.05,
+                    }}
+                    className="flex items-center gap-3 px-3 py-3 -mx-3 rounded-lg transition-all duration-200 cursor-pointer group"
+                    style={{ borderLeft: "3px solid transparent" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor =
+                        "rgba(30,30,28,0.025)";
+                      (e.currentTarget as HTMLElement).style.borderLeftColor =
+                        "#C1622F";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor =
+                        "transparent";
+                      (e.currentTarget as HTMLElement).style.borderLeftColor =
+                        "transparent";
+                    }}
+                  >
                     <NotePencil
                       size={14}
-                      className="text-text-secondary/40 shrink-0 group-hover:text-accent transition-colors duration-300"
+                      className="shrink-0"
+                      style={{ color: "#A8A8A5" }}
                     />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-text-primary/95 group-hover:text-accent transition-colors duration-300 truncate">
+                    <p
+                      className="flex-1 text-sm font-medium truncate"
+                      style={{ color: "#1E1E1C" }}
+                    >
                       {note.title}
                     </p>
-                  </div>
-                  <span className="text-[9px] font-bold text-text-secondary/40 shrink-0 uppercase tracking-wider tabular-nums">
-                    {note.time}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </SectionContainer>
-        </DashboardCard>
-
-        <DashboardCard variant="default" padding="md">
-          <SectionContainer
-            title="Upcoming"
-            action={
-              <button suppressHydrationWarning className="text-[10px] font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors flex items-center gap-1.5 px-2 py-1 rounded bg-white/[0.02] border border-white/[0.03]">
-                View all <ArrowRight size={10} />
-              </button>
-            }
-          >
-            <div className="space-y-1 mt-2">
-              {upcomingTasks.map((task, i) => (
-                <motion.div
-                  key={task.title}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: i * 0.04 }}
-                  className="flex items-center gap-3.5 p-3 rounded-xl hover:bg-white/[0.01] border border-transparent hover:border-white/[0.02] transition-all duration-300 cursor-pointer group"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-text-primary/95 group-hover:text-accent transition-colors duration-300 truncate">
-                      {task.title}
-                    </p>
-                  </div>
-                  
-                  {/* Styled task priority indicator badge */}
-                  <span className={`text-[8px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded border ${
-                    task.priority === "high"
-                      ? "bg-accent/10 border-accent/20 text-accent"
-                      : task.priority === "medium"
-                        ? "bg-accent-soft/10 border-accent-soft/20 text-accent-soft"
-                        : "bg-white/5 border-white/10 text-text-secondary/60"
-                  }`}>
-                    {task.priority}
-                  </span>
-                  
-                  <span
-                    className={`text-[9px] font-bold uppercase tracking-wider shrink-0 ${
-                      task.due === "Today"
-                        ? "text-accent"
-                        : "text-text-secondary/40"
-                    }`}
-                  >
-                    {task.due}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+                    <span
+                      className="text-[10px] font-semibold uppercase tracking-wider shrink-0"
+                      style={{ color: "#C8C8C5" }}
+                    >
+                      {note.time}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </SectionContainer>
         </DashboardCard>
       </motion.div>

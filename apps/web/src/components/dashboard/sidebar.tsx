@@ -1,201 +1,292 @@
 "use client";
 
-import { cn } from "@/lib/cn";
-import { useDashboard } from "@/lib/dashboard-context";
-import { SidebarNavItem } from "./sidebar-nav-item";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   House,
   BookOpen,
-  Sparkle,
   NotePencil,
-  CalendarDots,
-  ChartBar,
-  Trophy,
-  GearSix,
-  Sidebar as SidebarIcon,
-  X,
+  Robot,
+  User,
+  Gear,
+  GraduationCap,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: <House size={18} weight="duotone" /> },
-  { href: "/dashboard/courses", label: "My Courses", icon: <BookOpen size={18} weight="duotone" /> },
-  { href: "/ai/tutor", label: "AI Tutor", icon: <Sparkle size={18} weight="duotone" /> },
-  { href: "/dashboard/notes", label: "Notes", icon: <NotePencil size={18} weight="duotone" /> },
-  { href: "/dashboard/planner", label: "Planner", icon: <CalendarDots size={18} weight="duotone" /> },
-  { href: "/dashboard/analytics", label: "Analytics", icon: <ChartBar size={18} weight="duotone" /> },
-  { href: "/dashboard/achievements", label: "Achievements", icon: <Trophy size={18} weight="duotone" /> },
-  { href: "/dashboard/settings", label: "Settings", icon: <GearSix size={18} weight="duotone" /> },
+  { href: "/dashboard", label: "Home", icon: House },
+  { href: "/dashboard/courses", label: "My Courses", icon: BookOpen },
+  { href: "/dashboard/notes", label: "Notes", icon: NotePencil },
+  { href: "/ai", label: "AI Tutor", icon: Robot, isAI: true },
+];
+
+const bottomItems = [
+  { href: "/dashboard/profile", label: "Profile", icon: User },
+  { href: "/dashboard/settings", label: "Settings", icon: Gear },
 ];
 
 export function Sidebar() {
-  const {
-    sidebarCollapsed,
-    mobileSidebarOpen,
-    toggleSidebar,
-    closeMobileSidebar,
-  } = useDashboard();
+  const pathname = usePathname();
 
-  const sidebarContent = (
-    <div
-      className={cn(
-        "flex flex-col h-full transition-[width] duration-500 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
-        sidebarCollapsed ? "w-[68px]" : "w-[240px]"
-      )}
+  const isActive = (href: string) => {
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <motion.aside
+      initial={{ x: -8, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-[220px] shrink-0 h-screen flex flex-col overflow-hidden"
+      style={{ backgroundColor: "#18211E" }}
     >
-      {/* Logo */}
-      <div className="flex items-center justify-between px-4.5 h-[56px] border-b border-white/[0.03] shrink-0">
-        <Link
-          href="/dashboard"
-          className={cn(
-            "flex items-center gap-3 overflow-hidden",
-            sidebarCollapsed && "justify-center w-full"
-          )}
-        >
-          <div className="w-5.5 h-5.5 rounded-md bg-accent flex items-center justify-center shrink-0 shadow-glow relative overflow-hidden">
-            <span className="text-[9px] font-extrabold text-white relative z-10">A</span>
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
-          </div>
-          {!sidebarCollapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -4 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -4 }}
-              transition={{ type: "spring", stiffness: 380, damping: 28 }}
-              className="font-heading text-[14px] font-bold tracking-tight text-text-primary uppercase"
+      {/* Wordmark */}
+      <div className="px-6 pt-8 pb-6">
+        <Link href="/dashboard" className="block">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-7 h-7 rounded flex items-center justify-center shrink-0"
+              style={{ backgroundColor: "#C1622F" }}
+            >
+              <GraduationCap size={14} weight="bold" className="text-white" />
+            </div>
+            <span
+              className="text-lg tracking-tight text-white"
+              style={{ fontFamily: "var(--font-display)", fontWeight: 300 }}
             >
               Aethera
-            </motion.span>
-          )}
+            </span>
+          </div>
         </Link>
-        <button
-          suppressHydrationWarning
-          onClick={toggleSidebar}
-          className={cn(
-            "text-text-secondary/30 hover:text-text-primary hover:bg-white/[0.02] border border-transparent hover:border-white/[0.04] transition-all p-1 rounded-md",
-            sidebarCollapsed && "hidden"
-          )}
-          aria-label="Collapse sidebar"
+      </div>
+
+      {/* Divider */}
+      <div
+        className="mx-6 mb-5"
+        style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }}
+      />
+
+      {/* Nav Label */}
+      <div className="px-6 mb-3">
+        <span
+          className="text-[9px] font-semibold tracking-[0.14em] uppercase"
+          style={{ color: "rgba(255,255,255,0.3)" }}
         >
-          <SidebarIcon size={14} />
-        </button>
+          Workspace
+        </span>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col gap-1.5 px-2 py-6 overflow-y-auto">
-        {navItems.map((item) => (
-          <SidebarNavItem
-            key={item.href}
-            href={item.href}
-            label={item.label}
-            icon={item.icon}
-            collapsed={sidebarCollapsed}
+      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
+        {navItems.map((item) => {
+          const active = isActive(item.href);
+          const Icon = item.icon;
+          return (
+            <Link key={item.href} href={item.href}>
+              <div
+                className="relative flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 group cursor-pointer"
+                style={{
+                  backgroundColor: active
+                    ? "rgba(193, 98, 47, 0.12)"
+                    : "transparent",
+                  borderLeft: active
+                    ? "3px solid #C1622F"
+                    : "3px solid transparent",
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "rgba(255,255,255,0.04)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent";
+                  }
+                }}
+              >
+                <Icon
+                  size={16}
+                  weight={active ? "bold" : "regular"}
+                  style={{
+                    color: active
+                      ? item.isAI
+                        ? "#5C7A9B"
+                        : "#C1622F"
+                      : "rgba(255,255,255,0.45)",
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  className="text-sm font-medium transition-colors duration-200"
+                  style={{
+                    color: active
+                      ? "rgba(255,255,255,0.95)"
+                      : "rgba(255,255,255,0.5)",
+                  }}
+                >
+                  {item.label}
+                </span>
+                {item.isAI && (
+                  <span
+                    className="ml-auto text-[9px] font-semibold tracking-widest uppercase px-1.5 py-0.5 rounded"
+                    style={{
+                      backgroundColor: "rgba(92, 122, 155, 0.15)",
+                      color: "#5C7A9B",
+                    }}
+                  >
+                    AI
+                  </span>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+
+        {/* Section break */}
+        <div className="pt-5 pb-2 px-3">
+          <div
+            className="mb-3"
+            style={{
+              height: "1px",
+              backgroundColor: "rgba(255,255,255,0.06)",
+            }}
           />
-        ))}
+          <span
+            className="text-[9px] font-semibold tracking-[0.14em] uppercase"
+            style={{ color: "rgba(255,255,255,0.25)" }}
+          >
+            Learning
+          </span>
+        </div>
+
+        <Link href="/learn">
+          <div
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 cursor-pointer"
+            style={{
+              borderLeft: pathname.startsWith("/learn")
+                ? "3px solid #C1622F"
+                : "3px solid transparent",
+              backgroundColor: pathname.startsWith("/learn")
+                ? "rgba(193, 98, 47, 0.1)"
+                : "transparent",
+            }}
+            onMouseEnter={(e) => {
+              if (!pathname.startsWith("/learn")) {
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  "rgba(255,255,255,0.04)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!pathname.startsWith("/learn")) {
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  "transparent";
+              }
+            }}
+          >
+            <ArrowSquareOut
+              size={16}
+              style={{ color: "rgba(255,255,255,0.4)", flexShrink: 0 }}
+            />
+            <span
+              className="text-sm font-medium"
+              style={{ color: "rgba(255,255,255,0.45)" }}
+            >
+              Workspace
+            </span>
+          </div>
+        </Link>
       </nav>
 
-      {/* Bottom Profile Section */}
-      <div
-        className={cn(
-          "px-4 py-4 border-t border-white/[0.03] bg-black/[0.08]",
-          sidebarCollapsed && "flex justify-center"
-        )}
-      >
-        <div className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-accent-support/30 to-accent-support/10 flex items-center justify-center shrink-0 ring-1 ring-white/[0.08] shadow-inner relative overflow-hidden">
-            <span className="text-[9px] font-bold text-accent-soft/80 relative z-10">AK</span>
-            <div className="absolute inset-0 bg-black/10" />
+      {/* Bottom Section */}
+      <div className="px-3 pb-6">
+        <div
+          className="mb-3"
+          style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }}
+        />
+        {bottomItems.map((item) => {
+          const active = isActive(item.href);
+          const Icon = item.icon;
+          return (
+            <Link key={item.href} href={item.href}>
+              <div
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 cursor-pointer"
+                style={{
+                  borderLeft: active
+                    ? "3px solid #C1622F"
+                    : "3px solid transparent",
+                  backgroundColor: active
+                    ? "rgba(193, 98, 47, 0.1)"
+                    : "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "rgba(255,255,255,0.04)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent";
+                  }
+                }}
+              >
+                <Icon
+                  size={16}
+                  weight={active ? "bold" : "regular"}
+                  style={{
+                    color: active ? "#C1622F" : "rgba(255,255,255,0.35)",
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  className="text-sm font-medium"
+                  style={{
+                    color: active
+                      ? "rgba(255,255,255,0.9)"
+                      : "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  {item.label}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+
+        {/* User identity */}
+        <div
+          className="mt-4 pt-4 flex items-center gap-3 px-1"
+          style={{
+            borderTop: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white"
+            style={{ backgroundColor: "#C1622F" }}
+          >
+            K
           </div>
-          {!sidebarCollapsed && (
-            <div className="overflow-hidden flex-1">
-              <p className="text-xs font-semibold text-text-primary/95 group-hover:text-accent transition-colors duration-300 truncate">
-                Alex K.
-              </p>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-text-secondary/30 truncate">
-                Pro Learner
-              </p>
-            </div>
-          )}
+          <div className="min-w-0 flex-1">
+            <p
+              className="text-xs font-semibold truncate"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
+              Kartik
+            </p>
+            <p
+              className="text-[10px] truncate"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+              Student
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside
-        className={cn(
-          "hidden md:flex flex-col shrink-0 bg-bg-secondary/40 backdrop-blur-xl border-r border-white/[0.03] h-screen transition-[width] duration-500 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
-          sidebarCollapsed ? "w-[68px]" : "w-[240px]"
-        )}
-      >
-        {sidebarContent}
-      </aside>
-
-      {/* Mobile sidebar overlay */}
-      <AnimatePresence>
-        {mobileSidebarOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-              onClick={closeMobileSidebar}
-            />
-            <motion.aside
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="fixed left-0 top-0 bottom-0 z-50 w-[260px] bg-bg-secondary/80 backdrop-blur-xl border-r border-white/[0.03] md:hidden"
-            >
-              <div className="flex items-center justify-between px-4.5 h-[56px] border-b border-white/[0.03]">
-                <Link href="/dashboard" className="flex items-center gap-3">
-                  <div className="w-5.5 h-5.5 rounded-md bg-accent flex items-center justify-center shadow-glow">
-                    <span className="text-[9px] font-extrabold text-white">A</span>
-                  </div>
-                  <span className="font-heading text-[14px] font-bold tracking-tight text-text-primary uppercase">
-                    Aethera
-                  </span>
-                </Link>
-                <button
-                  suppressHydrationWarning
-                  onClick={closeMobileSidebar}
-                  className="text-text-secondary/40 hover:text-text-primary p-1.5 rounded-md hover:bg-white/[0.02] border border-transparent hover:border-white/[0.04] transition-all"
-                  aria-label="Close sidebar"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-              <nav className="flex flex-col gap-1.5 px-2 py-6">
-                {navItems.map((item) => (
-                  <SidebarNavItem
-                    key={item.href}
-                    href={item.href}
-                    label={item.label}
-                    icon={item.icon}
-                  />
-                ))}
-              </nav>
-              <div className="absolute bottom-0 left-0 right-0 px-4 py-4 border-t border-white/[0.03] bg-black/[0.08]">
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-accent-support/30 to-accent-support/10 flex items-center justify-center ring-1 ring-white/[0.08]">
-                    <span className="text-[9px] font-bold text-accent-soft/80">AK</span>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-text-primary/95">Alex K.</p>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-text-secondary/30">Pro Learner</p>
-                  </div>
-                </div>
-              </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+    </motion.aside>
   );
 }
