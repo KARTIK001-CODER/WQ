@@ -1,216 +1,196 @@
-import { Check } from "@phosphor-icons/react/dist/ssr";
-import { cn } from "@/lib/cn";
-import GlazedButton from "@/components/landing/ui/glazed-button";
+'use client';
+
+import { motion } from 'framer-motion';
+import { ScrollReveal } from '../ui/ScrollReveal';
+import { MagneticButton } from '../ui/MagneticButton';
 
 const plans = [
   {
-    name: "Starter",
-    tier: "FREE",
-    price: "$0",
-    period: "",
-    description: "Start your learning journey with the essentials. No credit card required.",
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    tagline: 'Start building the habit.',
     features: [
-      "5 courses per month",
-      "Basic AI summaries",
-      "Community access",
-      "Progress tracking",
+      'Access to 5 starter courses',
+      'Basic timestamp notes',
+      'Community access',
+      '7-day learning streaks',
     ],
-    ctaVariant: "ghost" as const,
-    cta: "Get Started",
-    href: "/register",
-    popular: false,
-    dark: false,
+    cta: 'Get Started Free',
+    dominant: false,
   },
   {
-    name: "Garden",
-    tier: "MOST POPULAR",
-    price: "$29",
-    period: "/mo",
-    description: "For dedicated learners ready to grow deeper and faster.",
+    id: 'pro',
+    name: 'Pro',
+    price: '$12',
+    period: 'per month',
+    tagline: 'For learners who are serious.',
     features: [
-      "Unlimited courses",
-      "Full AI tutor & pathing",
-      "Verifiable certificates",
-      "Deep focus mode",
-      "Priority support",
-      "Collaboration rooms",
+      'Full course library access',
+      'AI Tutor — lecture-aware',
+      'Advanced notes & export',
+      'Personalized learning path',
+      'Priority support',
+      'Offline mode',
     ],
-    ctaVariant: "verdant" as const,
-    cta: "Start Free Trial",
-    href: "/register?plan=pro",
-    popular: true,
-    dark: false,
-  },
-  {
-    name: "Aethera",
-    tier: "ENTERPRISE",
-    price: "Custom",
-    period: "",
-    description: "The full ecosystem for teams, organizations, and institutions.",
-    features: [
-      "Everything in Garden",
-      "Custom branding",
-      "Analytics dashboard",
-      "SSO & integrations",
-      "Dedicated mentor",
-      "White-label options",
-    ],
-    ctaVariant: "ghost" as const,
-    cta: "Contact Sales",
-    href: "/contact",
-    popular: false,
-    dark: true,
+    cta: 'Start Learning',
+    dominant: true,
   },
 ];
 
-export default function PricingClearing() {
+export function Pricing() {
   return (
-    <section
-      id="pricing"
-      className="relative overflow-hidden bg-[#EDF5F1] py-28 lg:py-36"
-    >
-      {/* Background orbs */}
-      <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,rgba(61,140,111,0.08)_0%,transparent_70%)]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle_at_center,rgba(107,181,161,0.06)_0%,transparent_70%)]" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+    <section id="pricing" className="py-28 bg-bg">
+      <div className="max-w-[1400px] mx-auto px-8">
         {/* Header */}
-        <div className="mb-20 text-center">
-          <span className="mb-5 inline-block font-sans text-xs font-bold uppercase tracking-[0.3em] text-verdant">
-            Invest in Growth
-          </span>
-          <h2 className="font-heading text-4xl tracking-tight text-deep-moss sm:text-5xl lg:text-6xl">
-            Simple, Transparent{" "}
-            <em className="font-light not-italic text-verdant">Pricing</em>
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg font-light leading-relaxed text-muted-pine">
-            Whether you&apos;re planting your first seed or cultivating a whole
-            orchard — there&apos;s a space for you.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="flex items-center justify-between mb-16">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-px bg-[rgba(30,30,28,0.2)]" />
+              <span className="meta-label">Pricing</span>
+            </div>
+            <p className="text-ink-2 text-sm font-sans hidden md:block">
+              Simple. Transparent. No tricks.
+            </p>
+          </div>
+        </ScrollReveal>
 
-        {/* Cards grid — all same size, no elevation difference */}
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-8 md:grid-cols-3">
-          {plans.map((plan) => {
-            const isDark = plan.dark;
-            const isPopular = plan.popular;
+        {/* Cards — asymmetric layout */}
+        <div className="flex flex-col lg:flex-row items-start gap-6">
+          {/* Free plan — smaller, slightly lower */}
+          <motion.div
+            className="lg:w-[340px] lg:mt-12 bg-white border border-[rgba(30,30,28,0.09)] rounded-xl p-8 flex-shrink-0"
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -3, transition: { duration: 0.3 } }}
+          >
+            <div className="mb-8">
+              <span className="meta-label block mb-4">Free</span>
+              <div className="flex items-baseline gap-1.5 mb-2">
+                <span className="font-display font-light text-[3.5rem] leading-none tracking-[-0.03em] text-ink">
+                  $0
+                </span>
+                <span className="text-ink-3 text-sm font-sans">/ forever</span>
+              </div>
+              <p className="text-ink-2 text-[13.5px] font-sans leading-relaxed">
+                Start building the habit.
+              </p>
+            </div>
 
-            return (
-              <div
-                key={plan.name}
-                className={cn(
-                  "relative flex flex-col rounded-2xl p-8 lg:p-10",
-                  "transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl",
-                  isDark
-                    ? "bg-deep-moss shadow-[0_8px_32px_-8px_rgba(30,45,38,0.35)]"
-                    : isPopular
-                    ? "bg-white shadow-[0_8px_32px_-8px_rgba(61,140,111,0.12)] ring-2 ring-verdant/25"
-                    : "bg-white shadow-[0_8px_32px_-8px_rgba(61,140,111,0.06)]"
-                )}
-              >
-                {/* Popular ribbon — visual only, no height change */}
-                {isPopular && (
-                  <div className="absolute right-6 top-0 -translate-y-1/2">
-                    <span className="inline-flex items-center rounded-full bg-verdant px-4 py-1.5 font-sans text-[10px] font-bold uppercase tracking-widest text-white shadow-md">
-                      Most Popular
+            <div className="border-t border-[rgba(30,30,28,0.07)] pt-7 mb-8">
+              <ul className="space-y-4">
+                {plans[0].features.map((f) => (
+                  <li key={f} className="flex items-start gap-3">
+                    <div className="w-4 h-4 rounded-sm border border-[rgba(30,30,28,0.15)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg width="7" height="5" viewBox="0 0 7 5" fill="none">
+                        <path
+                          d="M1 2.5l1.5 1.5 3.5-3.5"
+                          stroke="#1E1E1C"
+                          strokeWidth="1.3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          opacity="0.5"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-[13px] font-sans text-ink-2 leading-relaxed">
+                      {f}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <MagneticButton
+              href="/dashboard"
+              variant="ghost"
+              id="pricing-free-cta"
+              className="w-full py-3 text-[13px]"
+            >
+              Get Started Free
+            </MagneticButton>
+          </motion.div>
+
+          {/* Pro plan — dominant, dark */}
+          <motion.div
+            className="flex-1 bg-[#18211E] rounded-xl overflow-hidden relative"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          >
+            {/* Subtle glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[rgba(193,98,47,0.06)] rounded-full blur-[80px] pointer-events-none" />
+
+            <div className="p-10 relative z-10">
+              {/* Header */}
+              <div className="flex items-start justify-between mb-8">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.12em] uppercase text-[rgba(255,255,255,0.35)] block mb-4">
+                    Pro
+                  </span>
+                  <div className="flex items-baseline gap-1.5 mb-2">
+                    <span className="font-display font-light text-[4rem] leading-none tracking-[-0.03em] text-white">
+                      $12
+                    </span>
+                    <span className="text-[rgba(255,255,255,0.35)] text-sm font-sans">
+                      / month
                     </span>
                   </div>
-                )}
-
-                {/* Top accent line */}
-                <div
-                  className={cn(
-                    "absolute left-8 right-8 top-0 h-[2px] rounded-full",
-                    isDark
-                      ? "bg-gradient-to-r from-transparent via-sunlight/60 to-transparent"
-                      : isPopular
-                      ? "bg-gradient-to-r from-transparent via-verdant/60 to-transparent"
-                      : "bg-gradient-to-r from-transparent via-sea-foam/50 to-transparent"
-                  )}
-                />
-
-                {/* Tier label */}
-                <p className={cn(
-                  "mb-2 font-sans text-[10px] font-bold uppercase tracking-[0.28em]",
-                  isDark ? "text-sunlight/70" : isPopular ? "text-verdant/70" : "text-sea-foam/70"
-                )}>
-                  {plan.tier}
-                </p>
-
-                {/* Plan name */}
-                <h3 className={cn("font-heading text-2xl", isDark ? "text-morning-mist" : "text-deep-moss")}>
-                  {plan.name}
-                </h3>
-
-                {/* Price */}
-                <div className="mt-5 flex items-baseline gap-1">
-                  <span className={cn(
-                    "font-heading text-5xl font-semibold tracking-tight lg:text-6xl",
-                    isDark ? "text-morning-mist" : "text-deep-moss"
-                  )}>
-                    {plan.price}
-                  </span>
-                  {plan.period && (
-                    <span className={`font-sans text-sm ${isDark ? "text-morning-mist/50" : "text-muted-pine"}`}>
-                      {plan.period}
-                    </span>
-                  )}
+                  <p className="text-[rgba(255,255,255,0.5)] text-[13.5px] font-sans">
+                    For learners who are serious.
+                  </p>
                 </div>
-
-                {/* Description */}
-                <p className={cn(
-                  "mt-4 font-sans text-sm font-light leading-relaxed",
-                  isDark ? "text-morning-mist/55" : "text-muted-pine"
-                )}>
-                  {plan.description}
-                </p>
-
-                {/* Divider */}
-                <div className={cn("my-7 h-px w-full", isDark ? "bg-white/10" : "bg-muted-pine/10")} />
-
-                {/* Features — flex-1 keeps CTA at bottom */}
-                <ul className="flex-1 space-y-3">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3">
-                      <span className={cn(
-                        "mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full",
-                        isDark ? "bg-sunlight/15" : isPopular ? "bg-verdant/10" : "bg-sea-foam/10"
-                      )}>
-                        <Check weight="bold" className={cn(
-                          "h-3 w-3",
-                          isDark ? "text-sunlight" : isPopular ? "text-verdant" : "text-sea-foam"
-                        )} />
-                      </span>
-                      <span className={cn(
-                        "font-sans text-sm font-light",
-                        isDark ? "text-morning-mist/80" : "text-deep-moss"
-                      )}>
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <div className="mt-10">
-                  <GlazedButton
-                    href={plan.href}
-                    variant={isDark ? "sunlight" : isPopular ? "verdant" : "ghost"}
-                    size="md"
-                    className="w-full justify-center"
-                  >
-                    {plan.cta}
-                  </GlazedButton>
+                <div className="bg-ember/15 border border-ember/25 rounded-md px-3 py-1.5">
+                  <span className="text-ember text-[11px] font-sans font-medium">
+                    Most popular
+                  </span>
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Bottom note */}
-        <p className="mt-14 text-center font-sans text-sm font-light text-muted-pine">
-          All plans include a 14-day free trial. No credit card required.
-        </p>
+              {/* Divider */}
+              <div className="h-px bg-[rgba(255,255,255,0.07)] mb-8" />
+
+              {/* Features */}
+              <ul className="space-y-4 mb-10">
+                {plans[1].features.map((f) => (
+                  <li key={f} className="flex items-start gap-3">
+                    <div className="w-4 h-4 rounded-sm bg-ember/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg width="7" height="5" viewBox="0 0 7 5" fill="none">
+                        <path
+                          d="M1 2.5l1.5 1.5 3.5-3.5"
+                          stroke="#C1622F"
+                          strokeWidth="1.3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-[13.5px] font-sans text-[rgba(255,255,255,0.65)] leading-relaxed">
+                      {f}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <MagneticButton
+                href="/dashboard"
+                variant="ember"
+                id="pricing-pro-cta"
+                className="w-full py-4 text-[14px] font-medium"
+              >
+                Start Learning
+              </MagneticButton>
+
+              <p className="text-[rgba(255,255,255,0.2)] text-[11px] font-sans text-center mt-4">
+                Cancel anytime · No questions asked
+              </p>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

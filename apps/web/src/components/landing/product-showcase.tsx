@@ -1,128 +1,518 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 
-const features = [
+const BEATS = [
   {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-      </svg>
-    ),
-    title: "AI Tutor",
-    description: "Intelligent tutoring that adapts to your learning style in real time.",
+    id: 'video',
+    num: '01',
+    title: 'Watch without distraction.',
+    description:
+      'A clean, purpose-built video player. No ads, no sidebar recommendations. Control your pace — pause, rewind, change speed — with purpose.',
   },
   {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
-      </svg>
-    ),
-    title: "Interactive Video",
-    description: "Timestamped notes, AI explanations, and built-in quizzes.",
+    id: 'notes',
+    num: '02',
+    title: 'Notes tied to the moment.',
+    description:
+      'Timestamp notes attach to the exact second in a lecture. Review what you wrote and jump right back. Recall is built into the workflow.',
   },
   {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-      </svg>
-    ),
-    title: "Smart Paths",
-    description: "AI-driven recommendations personalized to your goals.",
+    id: 'ai',
+    num: '03',
+    title: 'Ask when you\'re stuck.',
+    description:
+      'Your AI tutor has watched every lecture you have. Ask anything — it knows the context, the terminology, the concept you just heard.',
   },
   {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-      </svg>
-    ),
-    title: "Analytics",
-    description: "Focus scores, patterns, and beautifully minimal dashboards.",
+    id: 'progress',
+    num: '04',
+    title: 'See your consistency.',
+    description:
+      'A calm, honest progress tracker. Your learning patterns, your streaks, your completion rate — insight without gamification.',
   },
   {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-      </svg>
-    ),
-    title: "Streaks & XP",
-    description: "Stay motivated with streaks, achievements, and leaderboards.",
-  },
-  {
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772" />
-      </svg>
-    ),
-    title: "Collaboration",
-    description: "Shared workspaces, live discussions, and peer feedback.",
+    id: 'library',
+    num: '05',
+    title: 'A library built for depth.',
+    description:
+      'Not 10,000 videos. The right 100. Every course is curated for quality, depth, and coherence. Breadth is easy — depth is rare.',
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
+export function WorkspaceShowcase() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const },
-  },
-};
+  // Map 0→1 scroll progress to 0→4 active index
+  const activeRaw = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.4, 0.6, 0.8, 1],
+    [0, 1, 2, 3, 4, 4]
+  );
 
-export default function ProductShowcase() {
   return (
-    <section id="features" className="relative py-36 md:py-48">
-      <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
-        >
-          <span className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-            Everything you need
+    <div ref={containerRef} className="relative bg-[#18211E]" style={{ height: '500vh' }}>
+      <div className="sticky top-0 h-screen flex flex-col overflow-hidden">
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-10 pt-9 pb-7 border-b border-[rgba(255,255,255,0.06)] flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-px bg-ember" />
+            <span className="text-[10px] font-sans font-semibold tracking-[0.12em] uppercase text-[rgba(255,255,255,0.35)]">
+              The Workspace
+            </span>
+          </div>
+          <span className="font-display font-light text-[rgba(255,255,255,0.12)] text-xl">
+            Aethera
           </span>
-          <h2 className="mt-4 font-heading text-4xl leading-tight tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-            A complete learning
-            <br />
-            <span className="text-text-secondary">operating system</span>
-          </h2>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-px overflow-hidden rounded-xl border border-border-subtle/50 bg-border-subtle/30 md:grid-cols-2 lg:grid-cols-3"
-        >
-          {features.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={itemVariants}
-              className="group bg-bg-secondary p-8 transition-all duration-300 hover:bg-bg-layer md:p-10"
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors duration-300 group-hover:bg-accent/20">
-                {feature.icon}
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-text-primary">
-                {feature.title}
-              </h3>
-              <p className="mt-2 font-sans text-sm leading-relaxed text-text-secondary">
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Main content */}
+        <div className="flex-1 grid grid-cols-[320px_1fr] min-h-0">
+          {/* Left: beat navigation */}
+          <div className="border-r border-[rgba(255,255,255,0.06)] p-10 flex flex-col justify-center gap-0 overflow-hidden">
+            {BEATS.map((beat, i) => (
+              <BeatItem key={beat.id} beat={beat} index={i} activeRaw={activeRaw} />
+            ))}
+          </div>
+
+          {/* Right: product panels */}
+          <div className="relative flex items-center justify-center p-8 overflow-hidden">
+            {BEATS.map((beat, i) => (
+              <ProductPanel
+                key={beat.id}
+                beat={beat}
+                index={i}
+                activeRaw={activeRaw}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+function BeatItem({
+  beat,
+  index,
+  activeRaw,
+}: {
+  beat: (typeof BEATS)[0];
+  index: number;
+  activeRaw: MotionValue<number>;
+}) {
+  const titleColor = useTransform(activeRaw, (v: number) => {
+    const dist = Math.abs(v - index);
+    return dist < 0.5
+      ? '#F6F3EE'
+      : `rgba(246,243,238,${Math.max(0.22, 0.22 + (0.78 - dist * 0.4))})`;
+  });
+
+  const itemOpacity = useTransform(activeRaw, (v: number) => {
+    const dist = Math.abs(v - index);
+    return Math.max(0.18, 1 - dist * 0.4);
+  });
+
+  const descOpacity = useTransform(activeRaw, (v: number) => {
+    const dist = Math.abs(v - index);
+    return dist < 0.6 ? Math.max(0, 1 - dist * 1.8) : 0;
+  });
+
+  const barScaleX = useTransform(activeRaw, (v: number) => {
+    const dist = Math.abs(v - index);
+    return dist < 0.5 ? 1 : 0;
+  });
+
+  return (
+    <motion.div
+      className="py-5 border-b border-[rgba(255,255,255,0.05)] last:border-0"
+      style={{ opacity: itemOpacity }}
+    >
+      <div className="flex items-start gap-4">
+        {/* Number + active bar */}
+        <div className="flex flex-col items-center gap-2 flex-shrink-0 mt-0.5">
+          <span className="text-[10px] font-mono text-[rgba(255,255,255,0.25)]">
+            {beat.num}
+          </span>
+          <motion.div
+            className="w-px h-3 bg-ember origin-top"
+            style={{ scaleY: barScaleX }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <motion.h3
+            className="font-display font-light text-[1.2rem] leading-tight tracking-[-0.01em] mb-2"
+            style={{ color: titleColor }}
+          >
+            {beat.title}
+          </motion.h3>
+          <motion.p
+            className="text-[13px] font-sans text-[rgba(255,255,255,0.45)] leading-relaxed"
+            style={{ opacity: descOpacity }}
+          >
+            {beat.description}
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ProductPanel({
+  beat,
+  index,
+  activeRaw,
+}: {
+  beat: (typeof BEATS)[0];
+  index: number;
+  activeRaw: MotionValue<number>;
+}) {
+  const opacity = useTransform(activeRaw, (v: number) => {
+    const dist = Math.abs(v - index);
+    return Math.max(0, 1 - dist * 2);
+  });
+
+  const y = useTransform(activeRaw, (v: number) => {
+    return (index - v) * 40;
+  });
+
+  return (
+    <motion.div
+      className="absolute inset-8"
+      style={{ opacity, y, pointerEvents: 'none' }}
+    >
+      <div className="w-full h-full">
+        {beat.id === 'video' && <VideoPanel />}
+        {beat.id === 'notes' && <NotesPanel />}
+        {beat.id === 'ai' && <AIPanel />}
+        {beat.id === 'progress' && <ProgressPanel />}
+        {beat.id === 'library' && <LibraryPanel />}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Product Panel Mockups ─── */
+
+function VideoPanel() {
+  return (
+    <div className="w-full h-full bg-[#0f1815] rounded-xl border border-[rgba(255,255,255,0.06)] flex flex-col overflow-hidden">
+      {/* Video area */}
+      <div className="flex-1 relative bg-gradient-to-br from-[#1a2a26] via-[#0f1815] to-[#0a1210] flex items-center justify-center">
+        <div className="absolute top-6 left-8 w-32 h-32 rounded-full bg-[rgba(78,124,107,0.05)] blur-3xl" />
+        <div className="absolute bottom-8 right-8 w-24 h-24 rounded-full bg-[rgba(92,122,155,0.06)] blur-3xl" />
+
+        <div className="relative z-10 flex flex-col items-center gap-5">
+          <div className="w-16 h-16 rounded-full bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+              <path d="M2 1.5l13 7.5-13 7.5V1.5z" fill="rgba(255,255,255,0.7)" />
+            </svg>
+          </div>
+          <div className="text-center">
+            <p className="text-[rgba(255,255,255,0.6)] text-sm font-sans">Training Data · Lecture 3</p>
+            <p className="text-[rgba(255,255,255,0.3)] text-xs font-sans mt-1">Introduction to AI · 41:00</p>
+          </div>
+        </div>
+
+        {/* Speed controls */}
+        <div className="absolute bottom-5 right-5 flex items-center gap-3 bg-[rgba(0,0,0,0.3)] rounded-md px-3 py-1.5 backdrop-blur-sm">
+          {['0.75×', '1×', '1.5×', '2×'].map((s) => (
+            <span
+              key={s}
+              className={`text-[11px] font-sans ${s === '1.5×' ? 'text-ember font-semibold' : 'text-[rgba(255,255,255,0.35)]'}`}
+            >
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Scrubber */}
+      <div className="px-6 py-4 border-t border-[rgba(255,255,255,0.05)]">
+        <div className="h-[2px] bg-[rgba(255,255,255,0.1)] rounded-full relative mb-2">
+          <div className="absolute left-0 top-0 h-full bg-ember rounded-full" style={{ width: '35%' }} />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-ember border-2 border-[#0f1815]"
+            style={{ left: 'calc(35% - 6px)' }}
+          />
+        </div>
+        <div className="flex justify-between">
+          <span className="text-[10px] font-mono text-[rgba(255,255,255,0.28)]">14:22</span>
+          <span className="text-[10px] font-mono text-[rgba(255,255,255,0.28)]">41:00</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NotesPanel() {
+  const notes = [
+    { time: '02:15', text: 'Training data is the foundation — garbage in, garbage out' },
+    { time: '08:41', text: 'Three types: supervised, unsupervised, reinforcement learning' },
+    { time: '14:22', text: 'Data labeling is expensive → consider active learning strategies' },
+    { time: '22:05', text: 'Class imbalance: oversample minority or undersample majority class' },
+  ];
+
+  return (
+    <div className="w-full h-full bg-[#111a17] rounded-xl border border-[rgba(255,255,255,0.06)] flex flex-col overflow-hidden">
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
+        <div className="w-2 h-2 rounded-full bg-[#5C7A9B]" />
+        <span className="text-[10px] font-sans font-semibold tracking-[0.1em] uppercase text-[rgba(255,255,255,0.3)]">
+          Timestamp Notes
+        </span>
+        <span className="ml-auto text-[10px] text-[rgba(92,122,155,0.7)] font-sans">Training Data · L3</span>
+      </div>
+
+      <div className="flex-1 p-6 space-y-5 overflow-hidden">
+        {notes.map((note, i) => (
+          <div key={i} className="flex gap-5">
+            <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
+              <span className="text-[10px] font-mono text-[rgba(92,122,155,0.7)]">{note.time}</span>
+              <div className="w-px flex-1 bg-[rgba(255,255,255,0.04)]" />
+            </div>
+            <p className="text-[13px] font-sans text-[rgba(255,255,255,0.6)] leading-relaxed pt-0.5 pb-3">
+              {note.text}
+            </p>
+          </div>
+        ))}
+
+        {/* Active cursor */}
+        <div className="flex gap-5">
+          <span className="text-[10px] font-mono text-ember/60 flex-shrink-0 pt-0.5">22:48</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[13px] font-sans text-[rgba(255,255,255,0.2)] italic">
+              Add a note...
+            </span>
+            <motion.div
+              className="w-px h-4 bg-[rgba(255,255,255,0.3)]"
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AIPanel() {
+  const messages = [
+    { role: 'user', text: 'What exactly is data augmentation?' },
+    {
+      role: 'ai',
+      text: 'Data augmentation artificially expands your training dataset by applying transformations to existing samples — flipping, rotating, cropping images. The model learns to generalize better without more raw data.',
+    },
+    { role: 'user', text: 'Does this apply to text data too?' },
+  ];
+
+  return (
+    <div className="w-full h-full bg-[#111a17] rounded-xl border border-[rgba(255,255,255,0.06)] flex flex-col overflow-hidden">
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
+        <div className="w-2 h-2 rounded-full bg-[#5C7A9B]" />
+        <span className="text-[10px] font-sans font-semibold tracking-[0.1em] uppercase text-[rgba(255,255,255,0.3)]">
+          AI Tutor
+        </span>
+        <span className="ml-auto text-[10px] text-[rgba(92,122,155,0.6)] font-sans">Lecture-aware</span>
+      </div>
+
+      <div className="flex-1 p-5 space-y-4 overflow-hidden">
+        {messages.map((msg, i) => (
+          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div
+              className={`max-w-[80%] rounded-xl px-4 py-3 ${
+                msg.role === 'user'
+                  ? 'bg-[rgba(193,98,47,0.18)] text-[rgba(255,255,255,0.8)]'
+                  : 'bg-[rgba(92,122,155,0.12)] border border-[rgba(92,122,155,0.18)] text-[rgba(255,255,255,0.65)]'
+              }`}
+            >
+              <p className="text-[12.5px] font-sans leading-relaxed">{msg.text}</p>
+            </div>
+          </div>
+        ))}
+
+        {/* Typing dots */}
+        <div className="flex justify-start">
+          <div className="bg-[rgba(92,122,155,0.1)] border border-[rgba(92,122,155,0.15)] rounded-xl px-4 py-3">
+            <div className="flex items-center gap-1.5">
+              {[0, 1, 2].map((j) => (
+                <motion.div
+                  key={j}
+                  className="w-1.5 h-1.5 rounded-full bg-[rgba(92,122,155,0.6)]"
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 0.8, repeat: Infinity, delay: j * 0.15, ease: 'easeInOut' }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-5 pb-5">
+        <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] rounded-lg px-4 py-3">
+          <span className="text-[12px] text-[rgba(255,255,255,0.22)] font-sans flex-1 italic">
+            Ask about this lecture...
+          </span>
+          <div className="w-6 h-6 rounded bg-[rgba(92,122,155,0.2)] flex items-center justify-center flex-shrink-0">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path
+                d="M1 5h8M5 1l4 4-4 4"
+                stroke="rgba(92,122,155,0.8)"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProgressPanel() {
+  const courses = [
+    { name: 'Introduction to AI', pct: 40, color: '#4E7C6B' },
+    { name: 'Python for Data Science', pct: 72, color: '#C1622F' },
+    { name: 'Machine Learning Basics', pct: 15, color: '#5C7A9B' },
+  ];
+
+  const weekActivity = [4, 6, 2, 7, 5, 0, 3];
+  const maxActivity = Math.max(...weekActivity);
+
+  return (
+    <div className="w-full h-full bg-[#111a17] rounded-xl border border-[rgba(255,255,255,0.06)] p-7 flex flex-col gap-6 overflow-hidden">
+      <div>
+        <span className="text-[10px] font-sans font-semibold tracking-[0.1em] uppercase text-[rgba(255,255,255,0.3)]">
+          Progress
+        </span>
+      </div>
+
+      <div className="space-y-5">
+        {courses.map((c, i) => (
+          <div key={i}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[12.5px] text-[rgba(255,255,255,0.6)] font-sans">{c.name}</span>
+              <span className="text-[11px] text-[rgba(255,255,255,0.3)] font-mono">{c.pct}%</span>
+            </div>
+            <div className="h-[2px] bg-[rgba(255,255,255,0.08)] rounded-full overflow-hidden">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: c.color }}
+                initial={{ width: 0 }}
+                animate={{ width: `${c.pct}%` }}
+                transition={{ delay: 0.2 + i * 0.1, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Weekly bars */}
+      <div>
+        <p className="text-[10px] font-sans font-semibold tracking-[0.1em] uppercase text-[rgba(255,255,255,0.25)] mb-3">
+          This Week
+        </p>
+        <div className="flex items-end gap-2.5 h-14">
+          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+              <div className="w-full flex items-end" style={{ height: '40px' }}>
+                <motion.div
+                  className="w-full rounded-sm"
+                  style={{
+                    background:
+                      weekActivity[i] > 0
+                        ? 'rgba(78,124,107,0.55)'
+                        : 'rgba(255,255,255,0.04)',
+                  }}
+                  initial={{ height: 0 }}
+                  animate={{
+                    height: weekActivity[i] > 0
+                      ? `${(weekActivity[i] / maxActivity) * 38}px`
+                      : '4px',
+                  }}
+                  transition={{ delay: 0.4 + i * 0.06, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
+              <span className="text-[9px] text-[rgba(255,255,255,0.2)] font-sans">{day}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Streak chip */}
+      <div className="mt-auto flex items-center gap-3 p-3 rounded-lg bg-[rgba(78,124,107,0.1)] border border-[rgba(78,124,107,0.18)]">
+        <span className="text-base">🔥</span>
+        <div>
+          <p className="text-[12px] text-[rgba(255,255,255,0.7)] font-sans font-medium">12-day streak</p>
+          <p className="text-[10px] text-[rgba(255,255,255,0.3)] font-sans">Keep going</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LibraryPanel() {
+  const courses = [
+    { title: 'Introduction to AI', meta: '12 lectures · 4h 20m', tag: 'Foundations', pct: null },
+    { title: 'Data Science with Python', meta: '18 lectures · 6h 15m', tag: 'Technical', pct: null },
+    { title: 'System Design', meta: '10 lectures · 3h 40m', tag: 'Engineering', pct: 72 },
+    { title: 'Product Thinking', meta: '8 lectures · 2h 55m', tag: 'Strategy', pct: null },
+  ];
+
+  return (
+    <div className="w-full h-full bg-[#111a17] rounded-xl border border-[rgba(255,255,255,0.06)] flex flex-col overflow-hidden">
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
+        <span className="text-[10px] font-sans font-semibold tracking-[0.1em] uppercase text-[rgba(255,255,255,0.3)]">
+          Course Library
+        </span>
+        <div className="ml-auto flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-md px-3 py-1">
+          <span className="text-[10px] text-[rgba(255,255,255,0.3)] font-sans">All Topics</span>
+          <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
+            <path d="M1 1l3 3 3-3" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex-1 p-4 space-y-2.5 overflow-hidden">
+        {courses.map((course, i) => (
+          <motion.div
+            key={i}
+            className="flex items-center gap-4 p-3.5 rounded-lg border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.025)] transition-colors"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="w-9 h-9 rounded-md bg-[rgba(255,255,255,0.05)] flex-shrink-0 border border-[rgba(255,255,255,0.04)]" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[12.5px] text-[rgba(255,255,255,0.7)] font-sans font-medium truncate">
+                {course.title}
+              </p>
+              <p className="text-[10.5px] text-[rgba(255,255,255,0.28)] font-sans mt-0.5">{course.meta}</p>
+            </div>
+            <div className="flex-shrink-0">
+              {course.pct ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-[2px] bg-[rgba(255,255,255,0.08)] rounded-full">
+                    <div className="h-full bg-moss rounded-full" style={{ width: `${course.pct}%` }} />
+                  </div>
+                  <span className="text-[10px] text-[#4E7C6B] font-mono">{course.pct}%</span>
+                </div>
+              ) : (
+                <span className="text-[10px] text-[rgba(255,255,255,0.2)] font-sans border border-[rgba(255,255,255,0.07)] px-2 py-0.5 rounded">
+                  {course.tag}
+                </span>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
   );
 }
