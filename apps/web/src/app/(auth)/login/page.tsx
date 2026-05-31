@@ -317,8 +317,8 @@ export default function LoginPage() {
             />
           </div>
 
-          <button
-            type="button"
+          <Link
+            href="/api/auth/google"
             className="mt-4 w-full h-10 rounded-md text-sm font-medium transition-all duration-150 flex items-center justify-center gap-2.5"
             style={{
               backgroundColor: "#FFFFFF",
@@ -341,7 +341,7 @@ export default function LoginPage() {
               <path d="M8 3.18c1.22 0 2.31.42 3.17 1.24l2.37-2.37A8 8 0 008 0 8 8 0 00.8 4.44l2.68 2.07A4.8 4.8 0 018 3.18z" fill="#EA4335"/>
             </svg>
             Continue with Google
-          </button>
+          </Link>
         </div>
       </motion.div>
     </div>
