@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   House,
@@ -12,6 +12,7 @@ import {
   Gear,
   GraduationCap,
   ArrowSquareOut,
+  SignOut,
 } from "@phosphor-icons/react";
 
 const navItems = [
@@ -28,10 +29,25 @@ const bottomItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+      if (response.ok) {
+        router.push("/login");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
   };
 
   return (
@@ -257,6 +273,34 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Logout Button */}
+        <div
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 cursor-pointer"
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.04)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+          }}
+        >
+          <SignOut
+            size={16}
+            style={{
+              color: "rgba(255,255,255,0.35)",
+              flexShrink: 0,
+            }}
+          />
+          <span
+            className="text-sm font-medium"
+            style={{
+              color: "rgba(255,255,255,0.4)",
+            }}
+          >
+            Log out
+          </span>
+        </div>
 
         {/* User identity */}
         <div

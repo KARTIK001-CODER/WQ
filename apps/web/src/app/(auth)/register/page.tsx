@@ -358,6 +358,50 @@ export default function RegisterPage() {
             </button>
           </form>
 
+          {/* OR separator */}
+          <div className="mt-5 flex items-center gap-3">
+            <div
+              className="flex-1 h-px"
+              style={{ backgroundColor: "rgba(30,30,28,0.08)" }}
+            />
+            <span
+              className="text-[10px] font-semibold tracking-widest uppercase"
+              style={{ color: "#A8A8A5" }}
+            >
+              or
+            </span>
+            <div
+              className="flex-1 h-px"
+              style={{ backgroundColor: "rgba(30,30,28,0.08)" }}
+            />
+          </div>
+
+          <Link
+            href="/api/auth/google"
+            className="mt-4 w-full h-10 rounded-md text-sm font-medium transition-all duration-150 flex items-center justify-center gap-2.5"
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid rgba(30,30,28,0.15)",
+              color: "#1E1E1C",
+            }}
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLElement).style.backgroundColor =
+                "rgba(30,30,28,0.02)")
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLElement).style.backgroundColor =
+                "#FFFFFF")
+            }
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M15.68 8.18c0-.57-.05-1.11-.14-1.64H8v3.1h4.3a3.67 3.67 0 01-1.6 2.42v2h2.58c1.51-1.4 2.4-3.45 2.4-5.88z" fill="#4285F4"/>
+              <path d="M8 16c2.16 0 3.97-.71 5.3-1.94l-2.59-2a4.8 4.8 0 01-2.71.75 4.8 4.8 0 01-4.52-3.32H.8v2.07A8 8 0 008 16z" fill="#34A853"/>
+              <path d="M3.48 9.49A4.83 4.83 0 013.23 8c0-.52.09-1.02.25-1.49V4.44H.8A8.01 8.01 0 000 8c0 1.3.31 2.53.8 3.56l2.68-2.07z" fill="#FBBC05"/>
+              <path d="M8 3.18c1.22 0 2.31.42 3.17 1.24l2.37-2.37A8 8 0 008 0 8 8 0 00.8 4.44l2.68 2.07A4.8 4.8 0 018 3.18z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </Link>
+
           <p
             className="mt-5 text-center text-xs leading-relaxed"
             style={{ color: "#A8A8A5" }}
