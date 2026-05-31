@@ -1,111 +1,119 @@
-import { Star } from "@phosphor-icons/react/dist/ssr";
-import CeramicCard from "@/components/landing/ui/ceramic-card";
+'use client';
 
-const testimonials = [
+import { motion } from 'framer-motion';
+import { ScrollReveal } from '../ui/ScrollReveal';
+
+const REVIEWS = [
   {
-    quote:
-      "This platform transformed how I learn. The focus mode alone is worth the subscription — it's like a greenhouse for my concentration.",
-    name: "Sarah K.",
-    course: "UX Design",
-    initials: "SK",
-    color: "bg-verdant",
-    glow: "verdant" as const,
+    name: 'Priya Mehta',
+    role: 'Software Engineer',
+    text: "Aethera changed how I approach learning. The workspace feels intentional — nothing is in the way.",
   },
   {
-    quote:
-      "Finally, an LMS that feels calm and intentional. My productivity has doubled since I stopped fighting my own learning environment.",
-    name: "Marcus T.",
-    course: "Web Development",
-    initials: "MT",
-    color: "bg-sea-foam",
-    glow: "seafoam" as const,
+    name: 'James Okafor',
+    role: 'Product Designer',
+    text: "I've tried every learning platform. None of them felt this considered. The notes system alone is worth it.",
   },
   {
-    quote:
-      "The AI tutor is like having a patient mentor available 24/7. It actually understands where I'm struggling and meets me there.",
-    name: "Priya R.",
-    course: "Data Science",
-    initials: "PR",
-    color: "bg-sunlight",
-    glow: "sunlight" as const,
+    name: 'Sofia Laurent',
+    role: 'Data Scientist',
+    text: "The AI Tutor understands the lecture context. It's not ChatGPT bolted on — it actually knows where you are.",
+  },
+  {
+    name: 'Marcus Chen',
+    role: 'Engineering Student',
+    text: "Completed two courses I'd been putting off for months. The design makes you want to come back.",
+  },
+  {
+    name: 'Aisha Patel',
+    role: 'ML Researcher',
+    text: "The completion rate isn't luck — it's design. Aethera makes consistency feel natural.",
+  },
+  {
+    name: 'Luca Rossi',
+    role: 'Startup Founder',
+    text: "Learning at 1.5x speed with timestamp notes is a superpower. Hours of learning, distilled.",
+  },
+  {
+    name: 'Yuna Kim',
+    role: 'UX Researcher',
+    text: "The typography alone tells you this was built with care. Rare for a learning platform.",
+  },
+  {
+    name: 'Noah Williams',
+    role: 'Backend Developer',
+    text: "Finally a platform that doesn't try to gamify everything. Just clean, focused learning.",
   },
 ];
 
-export default function GardenOfVoices() {
+// Duplicate for seamless loop
+const ROW_A = [...REVIEWS, ...REVIEWS];
+const ROW_B = [...[...REVIEWS].reverse(), ...[...REVIEWS].reverse()];
+
+function ReviewCard({
+  review,
+}: {
+  review: (typeof REVIEWS)[0];
+}) {
   return (
-    <section className="relative overflow-hidden bg-morning-mist py-28 lg:py-36">
-      {/* Background */}
-      <div className="pointer-events-none absolute left-1/4 top-0 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(61,140,111,0.06)_0%,transparent_70%)]" />
-      <div className="pointer-events-none absolute bottom-0 right-1/4 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(242,201,76,0.06)_0%,transparent_70%)]" />
-
-      {/* Top divider */}
-      <div className="mx-auto mb-24 h-px max-w-7xl bg-gradient-to-r from-transparent via-muted-pine/15 to-transparent" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-        {/* Header */}
-        <div className="mb-20 text-center">
-          <span className="mb-5 inline-block font-sans text-xs font-bold uppercase tracking-[0.3em] text-verdant">
-            The Garden of Voices
+    <motion.div
+      className="flex-shrink-0 w-[300px] bg-white border border-[rgba(30,30,28,0.08)] rounded-xl p-6 mx-3 cursor-default"
+      whileHover={{
+        y: -4,
+        boxShadow: '0 8px 32px rgba(30,30,28,0.1)',
+        transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+      }}
+    >
+      <p className="text-ink text-[13.5px] font-sans leading-[1.7] mb-5">
+        &ldquo;{review.text}&rdquo;
+      </p>
+      <div className="flex items-center gap-3 border-t border-[rgba(30,30,28,0.06)] pt-4">
+        <div className="w-7 h-7 rounded-full bg-[rgba(30,30,28,0.06)] flex items-center justify-center flex-shrink-0">
+          <span className="text-[11px] font-sans font-medium text-ink-2">
+            {review.name[0]}
           </span>
-          <h2 className="font-heading text-4xl tracking-tight text-deep-moss sm:text-5xl lg:text-6xl">
-            What Our Learners{" "}
-            <em className="font-light not-italic text-sea-foam">Say</em>
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg font-light leading-relaxed text-muted-pine">
-            Hear from the scholars who cultivate their minds here every day.
+        </div>
+        <div>
+          <p className="text-[12px] font-sans font-medium text-ink leading-none mb-0.5">
+            {review.name}
           </p>
+          <p className="text-[11px] font-sans text-ink-3">{review.role}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export function Reviews() {
+  return (
+    <section id="reviews" className="py-28 bg-bg overflow-hidden">
+      <div className="max-w-[1400px] mx-auto px-8 mb-14">
+        <ScrollReveal>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-px bg-[rgba(30,30,28,0.2)]" />
+            <span className="meta-label">What People Say</span>
+          </div>
+        </ScrollReveal>
+      </div>
+
+      {/* Marquee rows */}
+      <div className="space-y-4">
+        {/* Row 1 — scroll left */}
+        <div className="marquee-container overflow-hidden">
+          <div className="flex animate-scroll-left">
+            {ROW_A.map((review, i) => (
+              <ReviewCard key={`a-${i}`} review={review} />
+            ))}
+          </div>
         </div>
 
-        {/* 3-column testimonials */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {testimonials.map((t) => (
-            <CeramicCard key={t.name} glowColor={t.glow} className="p-8 flex flex-col">
-              {/* Stars */}
-              <div className="mb-5 flex items-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} weight="fill" className="h-4 w-4 text-sunlight" />
-                ))}
-              </div>
-
-              {/* Decorative quote mark */}
-              <p className="pointer-events-none absolute right-6 top-4 font-heading text-8xl leading-none text-muted-pine/8 select-none">
-                &ldquo;
-              </p>
-
-              {/* Quote */}
-              <p className="flex-1 font-sans text-base font-light italic leading-relaxed text-muted-pine">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-
-              {/* Attribution */}
-              <div className="mt-8 flex items-center gap-4 border-t border-muted-pine/10 pt-6">
-                <div
-                  className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full ${t.color} font-sans text-sm font-bold text-white shadow-md`}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="font-sans font-semibold text-deep-moss">{t.name}</p>
-                  <p className="font-sans text-sm text-muted-pine">{t.course}</p>
-                </div>
-              </div>
-            </CeramicCard>
-          ))}
-        </div>
-
-        {/* Bottom social proof strip */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
-          {[
-            { label: "Active Learners", value: "10,000+" },
-            { label: "Courses Published", value: "500+" },
-            { label: "Avg. Rating", value: "4.9 ★" },
-            { label: "Countries", value: "48" },
-          ].map(({ label, value }) => (
-            <div key={label} className="text-center">
-              <p className="font-heading text-xl font-semibold text-deep-moss">{value}</p>
-              <p className="font-sans text-sm text-muted-pine">{label}</p>
-            </div>
-          ))}
+        {/* Row 2 — scroll right */}
+        <div className="marquee-container overflow-hidden">
+          <div className="flex animate-scroll-right">
+            {ROW_B.map((review, i) => (
+              <ReviewCard key={`b-${i}`} review={review} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

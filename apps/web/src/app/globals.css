@@ -187,3 +187,33 @@ input:focus, textarea:focus, select:focus {
 .prose-editorial p {
   margin-bottom: 1.25rem;
 }
+
+/* === MARQUEE === */
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 42s linear infinite;
+  will-change: transform;
+}
+
+.marquee-container:hover .animate-scroll-left,
+.marquee-container:hover .animate-scroll-right {
+  animation-play-state: paused;
+}
+
+/* === CURSOR DEFAULT FOR INTERACTIVE ELEMENTS === */
+.cursor-default { cursor: default; }
+
