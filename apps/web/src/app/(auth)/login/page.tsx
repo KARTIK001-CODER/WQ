@@ -2,11 +2,178 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { GraduationCap, Eye, EyeSlash } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { GraduationCap, Eye, EyeSlash, Spinner } from "@phosphor-icons/react";
+import { useState, FormEvent, Suspense } from "react";
+
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong. Please check your credentials.");
+      }
+
+      // Success - redirect to target
+      router.push(redirectTo);
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div 
+          className="p-3.5 rounded text-xs leading-relaxed border"
+          style={{ 
+            backgroundColor: "rgba(193,98,47,0.06)", 
+            borderColor: "rgba(193,98,47,0.2)",
+            color: "#C1622F" 
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="login-email"
+          className="block text-[11px] font-semibold tracking-wider uppercase mb-1.5"
+          style={{ color: "#6B6B68" }}
+        >
+          Email
+        </label>
+        <input
+          id="login-email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full h-10 px-3.5 rounded-md text-sm transition-all duration-150"
+          style={{
+            backgroundColor: "#FFFFFF",
+            border: "1px solid rgba(30,30,28,0.15)",
+            color: "#1E1E1C",
+            outline: "none",
+          }}
+          onFocus={(e) => {
+            (e.target as HTMLElement).style.borderColor = "#C1622F";
+            (e.target as HTMLElement).style.boxShadow = "0 0 0 3px rgba(193,98,47,0.08)";
+          }}
+          onBlur={(e) => {
+            (e.target as HTMLElement).style.borderColor = "rgba(30,30,28,0.15)";
+            (e.target as HTMLElement).style.boxShadow = "none";
+          }}
+        />
+      </div>
+
+      {/* Password */}
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label
+            htmlFor="login-password"
+            className="block text-[11px] font-semibold tracking-wider uppercase"
+            style={{ color: "#6B6B68" }}
+          >
+            Password
+          </label>
+          <a
+            href="#"
+            className="text-xs transition-colors duration-150"
+            style={{ color: "#A8A8A5" }}
+          >
+            Forgot password?
+          </a>
+        </div>
+        <div className="relative">
+          <input
+            id="login-password"
+            type={showPassword ? "text" : "password"}
+            required
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full h-10 px-3.5 pr-10 rounded-md text-sm transition-all duration-150"
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid rgba(30,30,28,0.15)",
+              color: "#1E1E1C",
+              outline: "none",
+            }}
+            onFocus={(e) => {
+              (e.target as HTMLElement).style.borderColor = "#C1622F";
+              (e.target as HTMLElement).style.boxShadow = "0 0 0 3px rgba(193,98,47,0.08)";
+            }}
+            onBlur={(e) => {
+              (e.target as HTMLElement).style.borderColor = "rgba(30,30,28,0.15)";
+              (e.target as HTMLElement).style.boxShadow = "none";
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150"
+            style={{ color: "#A8A8A5" }}
+          >
+            {showPassword ? <EyeSlash size={15} /> : <Eye size={15} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div
+        className="h-px my-2"
+        style={{ backgroundColor: "rgba(30,30,28,0.08)" }}
+      />
+
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full h-10 rounded-md text-sm font-semibold text-white transition-opacity duration-150 hover:opacity-90 flex items-center justify-center gap-2"
+        style={{ backgroundColor: "#C1622F" }}
+      >
+        {loading ? (
+          <>
+            <Spinner size={16} className="animate-spin" />
+            Signing in...
+          </>
+        ) : (
+          "Sign in to Aethera"
+        )}
+      </button>
+    </form>
+  );
+}
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="min-h-screen grid lg:grid-cols-[1fr_1fr]" style={{ backgroundColor: "#F6F3EE" }}>
@@ -114,7 +281,7 @@ export default function LoginPage() {
             <p className="text-sm" style={{ color: "#6B6B68" }}>
               Don&apos;t have an account?{" "}
               <Link
-                href="/auth/register"
+                href="/register"
                 className="font-medium transition-colors duration-150"
                 style={{ color: "#C1622F" }}
               >
@@ -123,103 +290,14 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="space-y-4">
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="login-email"
-                className="block text-[11px] font-semibold tracking-wider uppercase mb-1.5"
-                style={{ color: "#6B6B68" }}
-              >
-                Email
-              </label>
-              <input
-                id="login-email"
-                type="email"
-                placeholder="you@example.com"
-                className="w-full h-10 px-3.5 rounded-md text-sm transition-all duration-150"
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid rgba(30,30,28,0.15)",
-                  color: "#1E1E1C",
-                  outline: "none",
-                }}
-                onFocus={(e) => {
-                  (e.target as HTMLElement).style.borderColor = "#C1622F";
-                  (e.target as HTMLElement).style.boxShadow = "0 0 0 3px rgba(193,98,47,0.08)";
-                }}
-                onBlur={(e) => {
-                  (e.target as HTMLElement).style.borderColor = "rgba(30,30,28,0.15)";
-                  (e.target as HTMLElement).style.boxShadow = "none";
-                }}
-              />
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center py-12 gap-3">
+              <Spinner size={24} className="animate-spin text-accent" />
+              <span className="text-xs" style={{ color: "#6B6B68" }}>Preparing workspace...</span>
             </div>
-
-            {/* Password */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label
-                  htmlFor="login-password"
-                  className="block text-[11px] font-semibold tracking-wider uppercase"
-                  style={{ color: "#6B6B68" }}
-                >
-                  Password
-                </label>
-                <a
-                  href="#"
-                  className="text-xs transition-colors duration-150"
-                  style={{ color: "#A8A8A5" }}
-                >
-                  Forgot password?
-                </a>
-              </div>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="w-full h-10 px-3.5 pr-10 rounded-md text-sm transition-all duration-150"
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    border: "1px solid rgba(30,30,28,0.15)",
-                    color: "#1E1E1C",
-                    outline: "none",
-                  }}
-                  onFocus={(e) => {
-                    (e.target as HTMLElement).style.borderColor = "#C1622F";
-                    (e.target as HTMLElement).style.boxShadow = "0 0 0 3px rgba(193,98,47,0.08)";
-                  }}
-                  onBlur={(e) => {
-                    (e.target as HTMLElement).style.borderColor = "rgba(30,30,28,0.15)";
-                    (e.target as HTMLElement).style.boxShadow = "none";
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150"
-                  style={{ color: "#A8A8A5" }}
-                >
-                  {showPassword ? <EyeSlash size={15} /> : <Eye size={15} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div
-              className="h-px my-2"
-              style={{ backgroundColor: "rgba(30,30,28,0.08)" }}
-            />
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="w-full h-10 rounded-md text-sm font-semibold text-white transition-opacity duration-150 hover:opacity-90"
-              style={{ backgroundColor: "#C1622F" }}
-            >
-              Sign in to Aethera
-            </button>
-          </form>
+          }>
+            <LoginForm />
+          </Suspense>
 
           {/* OR separator */}
           <div className="mt-5 flex items-center gap-3">
