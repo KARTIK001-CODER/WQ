@@ -2,11 +2,50 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { GraduationCap, Eye, EyeSlash } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { GraduationCap, Eye, EyeSlash, Spinner } from "@phosphor-icons/react";
+import { useState, FormEvent } from "react";
+
+type Role = "student" | "educator";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<Role>("student");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed. Please review your details.");
+      }
+
+      // Success - Redirect user to dashboard
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-[1fr_1fr]" style={{ backgroundColor: "#F6F3EE" }}>
@@ -126,7 +165,7 @@ export default function RegisterPage() {
             <p className="text-sm" style={{ color: "#6B6B68" }}>
               Already have an account?{" "}
               <Link
-                href="/auth/login"
+                href="/login"
                 className="font-medium"
                 style={{ color: "#C1622F" }}
               >
@@ -135,7 +174,20 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div 
+                className="p-3.5 rounded text-xs leading-relaxed border"
+                style={{ 
+                  backgroundColor: "rgba(193,98,47,0.06)", 
+                  borderColor: "rgba(193,98,47,0.2)",
+                  color: "#C1622F" 
+                }}
+              >
+                {error}
+              </div>
+            )}
+
             {/* Full Name */}
             <div>
               <label
@@ -148,7 +200,10 @@ export default function RegisterPage() {
               <input
                 id="reg-name"
                 type="text"
+                required
                 placeholder="Your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full h-10 px-3.5 rounded-md text-sm"
                 style={{
                   backgroundColor: "#FFFFFF",
@@ -179,7 +234,10 @@ export default function RegisterPage() {
               <input
                 id="reg-email"
                 type="email"
+                required
                 placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-10 px-3.5 rounded-md text-sm"
                 style={{
                   backgroundColor: "#FFFFFF",
@@ -211,7 +269,10 @@ export default function RegisterPage() {
                 <input
                   id="reg-password"
                   type={showPassword ? "text" : "password"}
+                  required
                   placeholder="Minimum 8 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-10 px-3.5 pr-10 rounded-md text-sm"
                   style={{
                     backgroundColor: "#FFFFFF",
@@ -239,14 +300,61 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* Role Selection */}
+            <div>
+              <span
+                className="block text-[11px] font-semibold tracking-wider uppercase mb-2"
+                style={{ color: "#6B6B68" }}
+              >
+                Choose your perspective
+              </span>
+              <div 
+                className="grid grid-cols-2 p-1 rounded-lg"
+                style={{ backgroundColor: "rgba(30,30,28,0.05)" }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setRole("student")}
+                  className="h-8 rounded-md text-xs font-semibold transition-all duration-150"
+                  style={{
+                    backgroundColor: role === "student" ? "#FFFFFF" : "transparent",
+                    color: role === "student" ? "#1E1E1C" : "#6B6B68",
+                    boxShadow: role === "student" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                  }}
+                >
+                  Student
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("educator")}
+                  className="h-8 rounded-md text-xs font-semibold transition-all duration-150"
+                  style={{
+                    backgroundColor: role === "educator" ? "#FFFFFF" : "transparent",
+                    color: role === "educator" ? "#1E1E1C" : "#6B6B68",
+                    boxShadow: role === "educator" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                  }}
+                >
+                  Educator
+                </button>
+              </div>
+            </div>
+
             <div className="h-px" style={{ backgroundColor: "rgba(30,30,28,0.08)" }} />
 
             <button
               type="submit"
-              className="w-full h-10 rounded-md text-sm font-semibold text-white transition-opacity duration-150 hover:opacity-90"
+              disabled={loading}
+              className="w-full h-10 rounded-md text-sm font-semibold text-white transition-opacity duration-150 hover:opacity-90 flex items-center justify-center gap-2"
               style={{ backgroundColor: "#C1622F" }}
             >
-              Create my workspace
+              {loading ? (
+                <>
+                  <Spinner size={16} className="animate-spin" />
+                  Creating workspace...
+                </>
+              ) : (
+                "Create my workspace"
+              )}
             </button>
           </form>
 

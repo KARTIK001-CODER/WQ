@@ -90,12 +90,6 @@ export function CustomCursor() {
       {/* Inner dot — snappy */}
       <motion.div
         className="fixed top-0 left-0 z-[9999] pointer-events-none"
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
         animate={{
           opacity: isVisible ? 1 : 0,
           scale: isHoveringInteractive ? 0.4 : 1,
@@ -110,7 +104,6 @@ export function CustomCursor() {
           width: 6,
           height: 6,
           borderRadius: '50%',
-          backgroundColor: '#1E1E1C',
         }}
       />
     </>
